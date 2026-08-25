@@ -217,6 +217,10 @@ trollingTab:CreateButton({ Name = "Admin Panel 1", Callback = function()
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Admin-Panel-238222"))() 
 end })
 
+trollingTab:CreateButton({ Name = "Spy Script", Callback = function() 
+    loadstring(game:HttpGet("https://gist.githubusercontent.com/DEVADMINENGINE/9bb547b158bc241a29a14bd43139a7aa/raw/7d7aff0bc1ff69be2b7e8bca848dfbb843399c91/dev%2520spyer"))()
+end })
+
 local fescriptsTab = window:CreateTab({ Name = "Fe Scripts", Icon = 93364949241311 })
 
 fescriptsTab:CreateSection({ Name = "R15" })
@@ -249,6 +253,10 @@ fescriptsTab:CreateSection({ Name = "R6" })
 
 fescriptsTab:CreateButton({ Name = "R6 Animation", Callback = function() 
     loadstring(game:HttpGet("https://pastefy.app/UC2OHMhe/raw"))() 
+end })
+
+fescriptsTab:CreateButton({ Name = "Slasher Anim", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-Slasher-Delta-R6-201469"))()
 end })
 
 fescriptsTab:CreateSection({ Name = "Supports All Body Types (May Need Netless)" })
