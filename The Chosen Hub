@@ -72,7 +72,7 @@ scriptsTab:CreateButton({ Name = "Novoline Admin", Callback = function()
     loadstring(game:HttpGet("https://novoline.pro"))()
 end })
 
-scriptsTab:CreateButton({ Name = "Admin panel", Callback = function() 
+scriptsTab:CreateButton({ Name = "Mafia Admin Panel", Callback = function() 
     loadstring(game:HttpGet("https://pastebin.com/raw/7RNUedb3"))()
 end })
 
