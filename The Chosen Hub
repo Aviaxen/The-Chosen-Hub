@@ -40,86 +40,6 @@ homeTab:CreateSlider({
     end 
 })
 
-local hubsTab = window:CreateTab({ Name = "Hubs", Icon = 93364949241311 })
-
-hubsTab:CreateSection({ Name = "Universal" })
-
-hubsTab:CreateButton({ Name = "Xvc Hub", Callback = function() 
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-XVC-Hub-202396"))() 
-end })
-
-hubsTab:CreateButton({ Name = "Dfxclan Hub", Callback = function() 
-    loadstring(game:HttpGet("https://pastebin.com/raw/HK1Xpajw"))() 
-end })
-
-hubsTab:CreateButton({ Name = "Degent Hub", Callback = function() 
-    loadstring(game:HttpGet("https://pastebin.com/raw/cr20JxP9"))() 
-end })
-
-hubsTab:CreateButton({ Name = "Zvc Hub (Old)", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Zvc-Hub/refs/heads/main/README.md"))() 
-end })
-
-hubsTab:CreateButton({ Name = "Galactic Hub", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/GalacticScripts/Galactic-Hub/refs/heads/main/WindUI"))() 
-end })
-
-hubsTab:CreateButton({ Name = "Yunus Hub", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/yunus154524/YunusLo1545-HUB/refs/heads/main/YunusLo1545%20HUB"))() 
-end })
-
-hubsTab:CreateButton({ Name = "Opiam Hub", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/HydraRBXM/opiamhub/refs/heads/main/OpiamMain"))() 
-end })
-
-hubsTab:CreateButton({ Name = "Altair Hub", Callback = function() 
-    loadstring(game:HttpGet("https://pastefy.app/hiwjpLFi/raw"))() 
-end })
-
-hubsTab:CreateButton({ Name = "Trolling Hub", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/yofriendfromschool1/Sky-Hub/main/FE%20Trolling%20GUI.luau"))() 
-end })
-
-hubsTab:CreateButton({ Name = "Universal Script Searcher", Callback = function() 
-    loadstring(game:HttpGet("http://scripthub.ultimatex.store"))() 
-end })
-
-hubsTab:CreateButton({ Name = "Jarvis Hub", Callback = function() 
-  loadstring(game:HttpGet("https://raw.githubusercontent.com/HeyGyt/jarvisv1/refs/heads/main/jarvis"))()
-end })
-
-hubsTab:CreateButton({ Name = "An Hub", Callback = function() 
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/GUI-Offical/FileTest/refs/heads/main/ANHUBB.lua'))()
-end })
-
-hubsTab:CreateButton({ Name = "Bacon Hub", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/BaconHub1/Autoupdate/refs/heads/main/Cuz%20yes"))()
-end })
-
-hubsTab:CreateButton({ Name = "Speed Hub X", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua", true))()
-end })
-
-hubsTab:CreateButton({ Name = "Nyx Mods Hub", Callback = function() 
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-NyxMods-Universal-245609"))()
-end })
-
-hubsTab:CreateButton({ Name = "Ghost Hub", Callback = function() 
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Ghost-hub-keyless-65732"))()
-end })
-
-hubsTab:CreateButton({ Name = "Rob Hub", Callback = function() 
-    loadstring(game:HttpGet("https://pastebin.com/raw/KSvbtcPE"))()
-end })
-
-hubsTab:CreateButton({ Name = "Solara Hub", Callback = function() 
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/samuraa1/Solara-Hub/refs/heads/main/SH.lua'))()
-end })
-
-hubsTab:CreateButton({ Name = "Aesthetic Hub", Callback = function() 
-    loadstring(game:HttpGet("https://gist.githubusercontent.com/Darknife339/b6b0d348c59ac034c8eb7f6210dd4029/raw/9c875ab4f5fdfccc4ef318912d9a02a4f08dd7ef/file.lua"))()
-end })
-
 local scriptsTab = window:CreateTab({ Name = "Scripts", Icon = 93364949241311 })
 
 scriptsTab:CreateSection({ Name = "Universal" })
@@ -363,12 +283,88 @@ scriptsTab:CreateButton({ Name = "Syntax Executor", Callback = function()
     loadstring(game:HttpGet('https://bitbucket.org/projects_early26/new/raw/0cd464afb03269ef1134a30fc8c407162e88dcac/v1.2.5.lua'))()
 end })
 
+local hubsTab = window:CreateTab({ Name = "Hubs", Icon = 93364949241311 })
+
+hubsTab:CreateSection({ Name = "Universal" })
+
+hubsTab:CreateButton({ Name = "Xvc Hub", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-XVC-Hub-202396"))() 
+end })
+
+hubsTab:CreateButton({ Name = "Dfxclan Hub", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/HK1Xpajw"))() 
+end })
+
+hubsTab:CreateButton({ Name = "Degent Hub", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/cr20JxP9"))() 
+end })
+
+hubsTab:CreateButton({ Name = "Zvc Hub (Old)", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Zvc-Hub/refs/heads/main/README.md"))() 
+end })
+
+hubsTab:CreateButton({ Name = "Galactic Hub", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GalacticScripts/Galactic-Hub/refs/heads/main/WindUI"))() 
+end })
+
+hubsTab:CreateButton({ Name = "Yunus Hub", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/yunus154524/YunusLo1545-HUB/refs/heads/main/YunusLo1545%20HUB"))() 
+end })
+
+hubsTab:CreateButton({ Name = "Opiam Hub", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/HydraRBXM/opiamhub/refs/heads/main/OpiamMain"))() 
+end })
+
+hubsTab:CreateButton({ Name = "Altair Hub", Callback = function() 
+    loadstring(game:HttpGet("https://pastefy.app/hiwjpLFi/raw"))() 
+end })
+
+hubsTab:CreateButton({ Name = "Universal Script Searcher", Callback = function() 
+    loadstring(game:HttpGet("http://scripthub.ultimatex.store"))() 
+end })
+
+hubsTab:CreateButton({ Name = "Jarvis Hub", Callback = function() 
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/HeyGyt/jarvisv1/refs/heads/main/jarvis"))()
+end })
+
+hubsTab:CreateButton({ Name = "An Hub", Callback = function() 
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/GUI-Offical/FileTest/refs/heads/main/ANHUBB.lua'))()
+end })
+
+hubsTab:CreateButton({ Name = "Bacon Hub", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/BaconHub1/Autoupdate/refs/heads/main/Cuz%20yes"))()
+end })
+
+hubsTab:CreateButton({ Name = "Speed Hub X", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua", true))()
+end })
+
+hubsTab:CreateButton({ Name = "Nyx Mods Hub", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-NyxMods-Universal-245609"))()
+end })
+
+hubsTab:CreateButton({ Name = "Ghost Hub", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Ghost-hub-keyless-65732"))()
+end })
+
+hubsTab:CreateButton({ Name = "Rob Hub", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/KSvbtcPE"))()
+end })
+
+hubsTab:CreateButton({ Name = "Solara Hub", Callback = function() 
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/samuraa1/Solara-Hub/refs/heads/main/SH.lua'))()
+end })
+
+hubsTab:CreateButton({ Name = "Aesthetic Hub", Callback = function() 
+    loadstring(game:HttpGet("https://gist.githubusercontent.com/Darknife339/b6b0d348c59ac034c8eb7f6210dd4029/raw/9c875ab4f5fdfccc4ef318912d9a02a4f08dd7ef/file.lua"))()
+end })
+
 local trollingTab = window:CreateTab({ Name = "Trolling", Icon = 93364949241311 })
 
 trollingTab:CreateSection({ Name = "Trolling" })
 
-trollingTab:CreateButton({ Name = "Grab Npcs", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/GUI-Offical/FileTest/refs/heads/main/Grab%20R6.txt", true))() 
+trollingTab:CreateButton({ Name = "Trolling Hub", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/yofriendfromschool1/Sky-Hub/main/FE%20Trolling%20GUI.luau"))()
 end })
 
 trollingTab:CreateButton({ Name = "Dropkick Fling", Callback = function() 
@@ -387,7 +383,6 @@ trollingTab:CreateButton({ Name = "Spy Script", Callback = function()
     loadstring(game:HttpGet("https://gist.githubusercontent.com/DEVADMINENGINE/9bb547b158bc241a29a14bd43139a7aa/raw/7d7aff0bc1ff69be2b7e8bca848dfbb843399c91/dev%2520spyer"))()
 end })
 
--- Changed variable name to Animationstab and display name to Animations
 local Animationstab = window:CreateTab({ name = "Animations", icon = 93364949241311 })
 
 Animationstab:CreateSection({ Name = "R15" })
@@ -448,6 +443,10 @@ Animationstab:CreateButton({ Name = "Uhhh Reanimate", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/STEVE-916-create/Uhhhhhh/main/source/reanim.lua"))()
 end })
 
+Animationstab:CreateButton({ Name = "Patchma Hub", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty25.lua"))()
+end })
+
 Animationstab:CreateButton({ Name = "Fe Noli Hats", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/qwertys/refs/heads/main/qwerty0.lua"))()
 end })
@@ -470,4 +469,8 @@ end })
 
 gamesTab:CreateButton({ Name = "Your Prison Life Hub", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Your-Prison-Life-Hub/refs/heads/main/README.md"))()
+end })
+
+gamesTab:CreateButton({ Name = "Your Murder Mystery Hub", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Your-Murder-Mystery-Hub/refs/heads/main/README.md"))()
 end })
