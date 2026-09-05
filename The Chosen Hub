@@ -277,6 +277,10 @@ scriptsTab:CreateButton({ Name = "Syntax Backdoor Executor", Callback = function
     loadstring(game:HttpGet('https://bitbucket.org/projects_early26/new/raw/0cd464afb03269ef1134a30fc8c407162e88dcac/v1.2.5.lua'))()
 end })
 
+scriptsTab:CreateButton({ Name = "Server Finder", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/MaxproGlitcher/Server_Finder_Deluxe_Back_Up/refs/heads/main/.luau"))()
+end })
+
 local hubsTab = window:CreateTab({ Name = "Hubs", Icon = 0 })
 
 hubsTab:CreateSection({ Name = "Universal" })
