@@ -1,14 +1,9 @@
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/gen2"))()
 
-local window = Rayfield:CreateWindow({ 
-    Name = "The Chosen Hub", 
-    Subtitle = "Remastered By Inky", 
-    Theme = "amethyst", 
-    Configuration = { 
-        AutoSave = true, 
-        AutoLoad = true, 
-        FileName = "The Chosen Hub" 
-    } 
+local window = Rayfield:CreateWindow({
+    name = "The Chosen Hub",
+    subtitle = "By Inky",
+    sidebarLayout = true,
 })
 
 local homeTab = window:CreateTab({ Name = "Home", Icon = 93364949241311 })
@@ -113,7 +108,226 @@ hubsTab:CreateButton({ Name = "Ghost Hub", Callback = function()
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Ghost-hub-keyless-65732"))()
 end })
 
+hubsTab:CreateButton({ Name = "Rob Hub", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/KSvbtcPE"))()
+end })
+
+hubsTab:CreateButton({ Name = "Solara Hub", Callback = function() 
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/samuraa1/Solara-Hub/refs/heads/main/SH.lua'))()
+end })
+
+hubsTab:CreateButton({ Name = "Aesthetic Hub", Callback = function() 
+    loadstring(game:HttpGet("https://gist.githubusercontent.com/Darknife339/b6b0d348c59ac034c8eb7f6210dd4029/raw/9c875ab4f5fdfccc4ef318912d9a02a4f08dd7ef/file.lua"))()
+end })
+
 local scriptsTab = window:CreateTab({ Name = "Scripts", Icon = 93364949241311 })
+
+scriptsTab:CreateSection({ Name = "Universal" })
+
+scriptsTab:CreateButton({ Name = "Infinite Yield", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/edgeiy/infiniteyield/master/source"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Nameless Admin", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/Source.lua"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Dex", Callback = function() 
+    loadstring(game:HttpGet("https://github.com/AZYsGithub/DexPlusPlus/releases/latest/download/out.lua"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Remote Spy", Callback = function() 
+    loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Paranoia Admin", Callback = function() 
+    loadstring(game:HttpGet("https://idx.lol/latest.lua"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Admin Panel", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Admin-Panel-238222"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Novoline Admin", Callback = function() 
+    loadstring(game:HttpGet("https://novoline.pro"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Admin panel", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/7RNUedb3"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Ak Admin", Callback = function() 
+    loadstring(game:HttpGet("https://absent.wtf/AKADMIN.lua"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Capy Admin Panel", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Capygg-UNIVERSAL-Admin-v3-238140"))()
+end })
+
+
+scriptsTab:CreateButton({ Name = "Youtube Music Player", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-YouTube-Music-Player-V8-236600"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Pshade (Shaders)", Callback = function() 
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/randomstring0/pshade-ultimate/refs/heads/main/src/cd.lua'))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Shiftlock", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-Shiftlock-No-Disappear-after-die-23318"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Fly 1", Callback = function() 
+    loadstring(game:HttpGet("https://pastefy.app/9bilwWLP/raw"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Fly 2", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-script-v3-16742"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Telekinesis Fling 1", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/biR1ZZA9"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Telekinesis 2", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Telekinesis-You-can-only-lift-unanc*d-things-237340"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Telekinesis 3", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-telekinetic-66554"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Telekinesis 4", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty1.lua"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Netless 1", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Anti-hat-fall-82624"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Delta Keyboard", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxtan31/Ata/main/deltakeyboardcrack.txt", true))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Verity V1", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/pQjRMdiG"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Welding Abuse", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/rangell8/Rexys-Welding-Hub/refs/heads/main/script"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Fast Fredbear", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/wbEc0ThZ"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Wither Storm", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ian49972/SCRIPTS/refs/heads/main/Wither"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Control Npcs", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/qwertys/refs/heads/main/qwerty8.lua"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Fe Punch", Callback = function() 
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/shakk-code/fe-punch-script/refs/heads/main/script.lua', true))()
+end })
+
+scriptsTab:CreateButton({ Name = "Grab Npcs", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GUI-Offical/FileTest/refs/heads/main/Grab%20R6.txt", true))()
+end })
+
+scriptsTab:CreateButton({ Name = "Tp Tool", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/FSKUSqc2"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Universal Script Searcher", Callback = function() 
+    loadstring(game:HttpGet("http://scripthub.ultimatex.store"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Script Searcher", Callback = function() 
+    loadstring(game:HttpGet("https://pastefy.app/cIrUcSTO/raw"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Quizbot", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Damian-11/quizbot/refs/heads/master/quizbot.luau"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Virtual Keyboard", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Jskfhggjxu/My-Script/refs/heads/main/VirtualKeyboard.lua"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Draw Chat Pro", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ocfi/_/refs/heads/main/a"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Egor Script", Callback = function() 
+    loadstring(game:HttpGet("https://pastefy.app/5EeMRVyx/raw"))()
+end })
+
+scriptsTab:CreateButton({ Name = "OpFinality", Callback = function() 
+    loadstring(game:HttpGet("https://github.com/pwnmaster99/Scripts/raw/refs/heads/main/OPFinality%20Revived"))()
+end })
+
+scriptsTab:CreateButton({ Name = "1x1x1x1 Gui", Callback = function() 
+    loadstring(game:HttpGet('https://pastebin.com/raw/tfAgBeaa'))()
+end })
+
+scriptsTab:CreateButton({ Name = "Ai Chat Bot", Callback = function() 
+    loadstring(game:HttpGet("https://pastefy.app/6c5jXS3z/raw"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Talentless", Callback = function() 
+    loadstring(game:HttpGet("https://hellohellohell0.com/talentless-raw/TALENTLESS.lua", true))()
+end })
+
+scriptsTab:CreateButton({ Name = "Fps Booster", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ashmehra852-lab/AshishAntiLag.Luaa/refs/heads/main/AshishAntialag.LUA"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Brainrot Police", Callback = function() 
+    loadstring(game:HttpGet("https://loadstring.net/scripts/brainrotpolice.lua"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Char Script", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/Bd9aaVmT"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Universal Script Creator", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Universal-Script-Creator/refs/heads/main/README.md"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Synapse X Executor", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/Chillz-s-scripts/main/Synapse-X-Remake.lua"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Inventory Esp", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Finilando/script/refs/heads/main/ESP%20INVENTORY"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Flashback Script", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/fARYvrb6"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Desync Script", Callback = function() 
+    loadstring(game:HttpGet("https://pastefy.app/MKQhZyAn/raw"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Ragdoll Script", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Rawbr10/Roblox-Scripts/refs/heads/main/0%20Graviy%20Trip%20Universal"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Phonk Script", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/9s2dyhcgwm-svg/Troll-phonk-meme/refs/heads/main/The%20Script"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Wikipedia Script", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/4UMAeFvE"))()  
+end })
+
+scriptsTab:CreateButton({ Name = "Aimbot", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/parasopsays/Jam/refs/heads/main/beef"))() 
+end })
 
 scriptsTab:CreateSection({ Name = "Gui" })
 
@@ -149,54 +363,6 @@ scriptsTab:CreateButton({ Name = "Syntax Executor", Callback = function()
     loadstring(game:HttpGet('https://bitbucket.org/projects_early26/new/raw/0cd464afb03269ef1134a30fc8c407162e88dcac/v1.2.5.lua'))()
 end })
 
-local toolsTab = window:CreateTab({ Name = "Tools", Icon = 93364949241311 })
-
-toolsTab:CreateSection({ Name = "Tools" })
-
-toolsTab:CreateButton({ Name = "Youtube Music Player", Callback = function() 
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-YouTube-Music-Player-V8-236600"))() 
-end })
-
-toolsTab:CreateButton({ Name = "Pshade (Shaders)", Callback = function() 
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/randomstring0/pshade-ultimate/refs/heads/main/src/cd.lua'))() 
-end })
-
-toolsTab:CreateButton({ Name = "Shiftlock", Callback = function() 
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-Shiftlock-No-Disappear-after-die-23318"))() 
-end })
-
-toolsTab:CreateButton({ Name = "Fly 1", Callback = function() 
-    loadstring(game:HttpGet("https://pastefy.app/9bilwWLP/raw"))() 
-end })
-
-toolsTab:CreateButton({ Name = "Fly 2", Callback = function() 
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-script-v3-16742"))() 
-end })
-
-toolsTab:CreateButton({ Name = "Telekinesis Fling 1", Callback = function() 
-    loadstring(game:HttpGet("https://pastebin.com/raw/biR1ZZA9"))()
-end })
-
-toolsTab:CreateButton({ Name = "Telekinesis 2", Callback = function() 
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Telekinesis-You-can-only-lift-unanc*d-things-237340"))()
-end })
-
-toolsTab:CreateButton({ Name = "Telekinesis 3", Callback = function() 
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-telekinetic-66554"))()
-end })
-
-toolsTab:CreateButton({ Name = "Telekinesis 4", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty1.lua"))()
-end })
-
-toolsTab:CreateButton({ Name = "Netless 1", Callback = function() 
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Anti-hat-fall-82624"))()
-end })
-
-toolsTab:CreateButton({ Name = "Delta Keyboard", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxtan31/Ata/main/deltakeyboardcrack.txt", true))()
-end })
-
 local trollingTab = window:CreateTab({ Name = "Trolling", Icon = 93364949241311 })
 
 trollingTab:CreateSection({ Name = "Trolling" })
@@ -213,110 +379,81 @@ trollingTab:CreateButton({ Name = "Fling Gui 1", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/sypcerr/scripts/refs/heads/main/UFGUI", true))() 
 end })
 
-trollingTab:CreateButton({ Name = "Admin Panel 1", Callback = function() 
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Admin-Panel-238222"))() 
+trollingTab:CreateButton({ Name = "Fling Gui 2", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GoldenCheats/natural-disaster-script/refs/heads/main/NATURAL%20DISASTER%20FLING%20V2"))()
 end })
 
 trollingTab:CreateButton({ Name = "Spy Script", Callback = function() 
     loadstring(game:HttpGet("https://gist.githubusercontent.com/DEVADMINENGINE/9bb547b158bc241a29a14bd43139a7aa/raw/7d7aff0bc1ff69be2b7e8bca848dfbb843399c91/dev%2520spyer"))()
 end })
 
-local fescriptsTab = window:CreateTab({ Name = "Fe Scripts", Icon = 93364949241311 })
+-- Changed variable name to Animationstab and display name to Animations
+local Animationstab = window:CreateTab({ name = "Animations", icon = 93364949241311 })
 
-fescriptsTab:CreateSection({ Name = "R15" })
+Animationstab:CreateSection({ Name = "R15" })
 
-fescriptsTab:CreateButton({ Name = "R15 Emotes", Callback = function() 
+Animationstab:CreateButton({ Name = "R15 Emotes", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Bac0nHck/Scripts/refs/heads/main/BundleAnimations.lua"))()
 end })
 
-fescriptsTab:CreateButton({ Name = "Sonic R15", Callback = function() 
+Animationstab:CreateButton({ Name = "Sonic R15", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Azizanzz0/FE-R15-Sonic-X-Super/refs/heads/main/Protected%20SonicXSuper.txt"))()
 end })
 
-fescriptsTab:CreateButton({ Name = "Drone R15", Callback = function() 
+Animationstab:CreateButton({ Name = "Drone R15", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/qwertys/refs/heads/main/qwerty16.lua"))()
 end })
 
-fescriptsTab:CreateButton({ Name = "Ink Monster R15", Callback = function() 
+Animationstab:CreateButton({ Name = "Ink Monster R15", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/qwertys/refs/heads/main/qwerty14.lua"))()
 end })
 
-fescriptsTab:CreateButton({ Name = "R15 Mini Car", Callback = function() 
+Animationstab:CreateButton({ Name = "R15 Mini Car", Callback = function() 
     loadstring(game:HttpGet("https://pastefy.app/UqDEIOpO/raw"))()
 end })
 
-fescriptsTab:CreateButton({ Name = "R15 Katana", Callback = function() 
+Animationstab:CreateButton({ Name = "R15 Katana", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/qwertys/refs/heads/main/qwerty12.lua"))()
 end })
 
-fescriptsTab:CreateSection({ Name = "R6" })
+Animationstab:CreateButton({ Name = "R15 Animation", Callback = function() 
+    loadstring(game:HttpGet("https://kbauu.neocities.org/animation-hub"))()  
+end })
 
-fescriptsTab:CreateButton({ Name = "R6 Animation", Callback = function() 
+Animationstab:CreateButton({ Name = "Scary Animation", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Scary-Anim/refs/heads/main/README.md"))()
+end })
+
+Animationstab:CreateButton({ Name = "Invincible Fly", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Invincible-Fly/refs/heads/main/README.md"))()
+end })
+
+Animationstab:CreateSection({ Name = "R6" })
+
+Animationstab:CreateButton({ Name = "R6 Animation", Callback = function() 
     loadstring(game:HttpGet("https://pastefy.app/UC2OHMhe/raw"))() 
 end })
 
-fescriptsTab:CreateButton({ Name = "Slasher Anim", Callback = function() 
+Animationstab:CreateButton({ Name = "Slasher Anim", Callback = function() 
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-Slasher-Delta-R6-201469"))()
 end })
 
-fescriptsTab:CreateSection({ Name = "Supports All Body Types (May Need Netless)" })
+Animationstab:CreateButton({ Name = "Sonic Exe", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/chqPBh9F"))()
+end })
 
-fescriptsTab:CreateButton({ Name = "Uhhh Reanimate", Callback = function() 
+Animationstab:CreateSection({ Name = "Hats Or Reanimation" })
+
+Animationstab:CreateButton({ Name = "Uhhh Reanimate", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/STEVE-916-create/Uhhhhhh/main/source/reanim.lua"))()
 end })
 
-fescriptsTab:CreateSection({ Name = "Needs Hats Or Rigs" })
-
-fescriptsTab:CreateButton({ Name = "Fe Noli Hats", Callback = function() 
+Animationstab:CreateButton({ Name = "Fe Noli Hats", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/qwertys/refs/heads/main/qwerty0.lua"))()
 end })
 
-fescriptsTab:CreateButton({ Name = "Fe Coolkid Hats", Callback = function() 
+Animationstab:CreateButton({ Name = "Fe Coolkid Hats", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/qwertys/refs/heads/main/qwerty2.lua"))()
-end })
-
-local funTab = window:CreateTab({ Name = "Fun", Icon = 93364949241311 })
-
-funTab:CreateSection({ Name = "Fun" })
-
-funTab:CreateButton({ Name = "Verity V1", Callback = function() 
-    loadstring(game:HttpGet("https://pastebin.com/raw/pQjRMdiG"))() 
-end })
-
-funTab:CreateButton({ Name = "Welding Abuse", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/rangell8/Rexys-Welding-Hub/refs/heads/main/script"))() 
-end })
-
-funTab:CreateButton({ Name = "Fast Fredbear", Callback = function() 
-    loadstring(game:HttpGet("https://pastebin.com/raw/wbEc0ThZ"))()
-end })
-
-funTab:CreateButton({ Name = "Wither Storm", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/ian49972/SCRIPTS/refs/heads/main/Wither"))()
-end })
-
-funTab:CreateButton({ Name = "Control Npcs", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/qwertys/refs/heads/main/qwerty8.lua"))()
-end })
-
-local adminTab = window:CreateTab({ Name = "Admin", Icon = 93364949241311 })
-
-adminTab:CreateSection({ Name = "Admin" })
-
-adminTab:CreateButton({ Name = "Admin Panel 1", Callback = function() 
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Admin-Panel-238222"))() 
-end })
-
-adminTab:CreateButton({ Name = "Infinite Yield", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/edgeiy/infiniteyield/master/source"))() 
-end })
-
-adminTab:CreateButton({ Name = "Nameless Admin", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/Source.lua"))() 
-end })
-
-adminTab:CreateButton({ Name = "Paranoia Admin", Callback = function() 
-    loadstring(game:HttpGet("https://idx.lol/latest.lua"))()
 end })
 
 local gamesTab = window:CreateTab({ Name = "Games", icon = 93364949241311 })
@@ -328,9 +465,9 @@ gamesTab:CreateButton({ Name = "Your Natural Disaster Hub", Callback = function(
 end })
 
 gamesTab:CreateButton({ Name = "Your 99 Nights Hub", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Inkyxen/Your-99-nights-hub/refs/heads/main/Your%2099%20Nights%20Hub"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Your-99-Nights-Hub/refs/heads/main/README.md"))()
 end })
 
 gamesTab:CreateButton({ Name = "Your Prison Life Hub", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Inkyxen/Your-Prison-Life-Hub/refs/heads/main/Your%20Prison%20Life%20Hub"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Your-Prison-Life-Hub/refs/heads/main/README.md"))()
 end })
