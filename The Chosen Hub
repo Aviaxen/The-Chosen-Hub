@@ -417,6 +417,10 @@ Animationstab:CreateButton({ Name = "Invincible Fly", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Invincible-Fly/refs/heads/main/README.md"))()
 end })
 
+Animationstab:CreateButton({ Name = "Shadow The Hedgehog", Callback = function() 
+    loadstring(game:HttpGet("https://pastefy.app/0QSkiaHL/raw"))()
+end })
+
 Animationstab:CreateSection({ Name = "R6" })
 
 Animationstab:CreateButton({ Name = "R6 Animation", Callback = function() 
