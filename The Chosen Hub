@@ -42,9 +42,11 @@ local function addEsp(player)
         if character:FindFirstChild("ESPHighlight") then character.ESPHighlight:Destroy() end
         if character:FindFirstChild("ESPNameTag") then character.ESPNameTag:Destroy() end
         
-        local head = character:WaitForChild("Head")
-        local rootPart = character:WaitForChild("HumanoidRootPart")
-        if not head or not rootPart then return end
+        local humanoid = character:WaitForChild("Humanoid", 5)
+        local head = character:FindFirstChild("Head") or character:FindFirstChildWhichIsA("BasePart")
+        local rootPart = character:FindFirstChild("HumanoidRootPart") or (humanoid and humanoid.RootPart) or head
+        
+        if not rootPart or not head then return end
         
         local highlight = Instance.new("Highlight")
         highlight.Name = "ESPHighlight"
@@ -76,14 +78,17 @@ local function addEsp(player)
         
         local renderConnection
         renderConnection = RunService.RenderStepped:Connect(function()
-            if not getgenv().EspEnabled or not character:IsDescendantOf(workspace) or not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            if not getgenv().EspEnabled or not character:IsDescendantOf(workspace) or not LocalPlayer.Character then
                 renderConnection:Disconnect()
                 return
             end
             
+            local myRoot = LocalPlayer.Character:FindFirstChild("HumanoidRootPart") or LocalPlayer.Character:FindFirstChildWhichIsA("BasePart")
+            if not myRoot or not rootPart:IsDescendantOf(workspace) then return end
+            
             highlight.FillColor = getgenv().EspColor
             
-            local myPos = LocalPlayer.Character.HumanoidRootPart.Position
+            local myPos = myRoot.Position
             local theirPos = rootPart.Position
             local distance = math.floor((myPos - theirPos).Magnitude)
             
@@ -142,6 +147,7 @@ homeTab:CreateColorPicker({
         getgenv().EspColor = color 
     end,
 })
+
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
