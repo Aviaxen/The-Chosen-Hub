@@ -26,6 +26,236 @@ homeTab:CreateButton({ Name = "Remote Spy", Callback = function()
     loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua"))() 
 end })
 
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+
+getgenv().EspEnabled = false
+getgenv().EspColor = Color3.fromRGB(96, 205, 255) 
+
+local function addEsp(player)
+    if player == LocalPlayer then return end
+    
+    local function applyHighlight(character)
+        if not character then return end
+        
+        if character:FindFirstChild("ESPHighlight") then character.ESPHighlight:Destroy() end
+        if character:FindFirstChild("ESPNameTag") then character.ESPNameTag:Destroy() end
+        
+        local head = character:WaitForChild("Head")
+        local rootPart = character:WaitForChild("HumanoidRootPart")
+        if not head or not rootPart then return end
+        
+        local highlight = Instance.new("Highlight")
+        highlight.Name = "ESPHighlight"
+        highlight.FillColor = getgenv().EspColor            
+        highlight.OutlineColor = Color3.fromRGB(255, 255, 255) 
+        highlight.FillTransparency = 0.5                      
+        highlight.OutlineTransparency = 0                     
+        highlight.Adornee = character
+        highlight.Parent = character
+        
+        local billboard = Instance.new("BillboardGui")
+        billboard.Name = "ESPNameTag"
+        billboard.Size = UDim2.new(0, 200, 0, 60)             
+        billboard.StudsOffset = Vector3.new(0, 3, 0)          
+        billboard.AlwaysOnTop = true                          
+        billboard.Adornee = head
+        billboard.Parent = character
+        
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(1, 0, 1, 0)
+        label.BackgroundTransparency = 1                      
+        label.TextColor3 = Color3.fromRGB(255, 255, 255)      
+        label.TextSize = 14                                   
+        label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)      
+        label.TextStrokeTransparency = 0                      
+        label.Font = Enum.Font.SourceSansBold                 
+        label.TextYAlignment = Enum.TextYAlignment.Center     
+        label.Parent = billboard
+        
+        local renderConnection
+        renderConnection = RunService.RenderStepped:Connect(function()
+            if not getgenv().EspEnabled or not character:IsDescendantOf(workspace) or not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                renderConnection:Disconnect()
+                return
+            end
+            
+            highlight.FillColor = getgenv().EspColor
+            
+            local myPos = LocalPlayer.Character.HumanoidRootPart.Position
+            local theirPos = rootPart.Position
+            local distance = math.floor((myPos - theirPos).Magnitude)
+            
+            if distance <= 1000 then
+                highlight.Enabled = true
+                billboard.Enabled = true
+                label.Text = player.Name .. "\n[" .. distance .. " studs]"
+            else
+                highlight.Enabled = false
+                billboard.Enabled = false
+            end
+        end)
+    end
+
+    if player.Character then
+        task.spawn(applyHighlight, player.Character)
+    end
+    player.CharacterAdded:Connect(applyHighlight)
+end
+
+local espToggle = homeTab:CreateToggle({
+    name = "Player ESP",
+    flag = "PlayerESP",
+    value = false,
+    callback = function(value)
+        getgenv().EspEnabled = value
+        
+        if getgenv().EspEnabled then
+            for _, player in ipairs(Players:GetPlayers()) do
+                addEsp(player)
+            end
+            getgenv().PlayerAddedConnection = Players.PlayerAdded:Connect(addEsp)
+        else
+            if getgenv().PlayerAddedConnection then
+                getgenv().PlayerAddedConnection:Disconnect()
+                getgenv().PlayerAddedConnection = nil
+            end
+            for _, player in ipairs(Players:GetPlayers()) do
+                if player.Character then
+                    if player.Character:FindFirstChild("ESPHighlight") then
+                        player.Character.ESPHighlight:Destroy()
+                    end
+                    if player.Character:FindFirstChild("ESPNameTag") then
+                        player.Character.ESPNameTag:Destroy()
+                    end
+                end
+            end
+        end
+    end,
+})
+
+homeTab:CreateColorPicker({
+    name = "Highlight Color",
+    color = Color3.fromRGB(96, 205, 255),
+    callback = function(color, alpha)
+        getgenv().EspColor = color 
+    end,
+})
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+
+getgenv().FlyEnabled = false
+getgenv().FlySpeed = 50 
+
+local flyConnection
+local bodyVelocity
+local bodyGyro
+
+local function startFlying()
+    local character = LocalPlayer.Character
+    if not character then return end
+    local rootPart = character:WaitForChild("HumanoidRootPart", 5)
+    local humanoid = character:WaitForChild("Humanoid", 5)
+    if not rootPart or not humanoid then return end
+    
+    humanoid.PlatformStand = true
+    
+    bodyGyro = Instance.new("BodyGyro")
+    bodyGyro.P = 9e4
+    bodyGyro.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+    bodyGyro.cframe = rootPart.CFrame
+    bodyGyro.Parent = rootPart
+
+    bodyVelocity = Instance.new("BodyVelocity")
+    bodyVelocity.velocity = Vector3.new(0, 0, 0)
+    bodyVelocity.maxForce = Vector3.new(9e9, 9e9, 9e9)
+    bodyVelocity.Parent = rootPart
+    
+    flyConnection = RunService.RenderStepped:Connect(function()
+        if not getgenv().FlyEnabled or not character:IsDescendantOf(workspace) or not rootPart then
+            if flyConnection then flyConnection:Disconnect() end
+            return
+        end
+
+        local camera = workspace.CurrentCamera
+        local moveDirection = humanoid.MoveDirection
+        
+        local targetVelocity = Vector3.new(0, 0, 0)
+
+        if moveDirection.Magnitude > 0 then
+            local lookVector = camera.CFrame.LookVector
+            
+            local flatLook = Vector3.new(lookVector.X, 0, lookVector.Z).Unit
+            local rightVector = camera.CFrame.RightVector
+            local flatRight = Vector3.new(rightVector.X, 0, rightVector.Z).Unit
+            
+            local forwardDot = moveDirection:Dot(flatLook)
+            local rightDot = moveDirection:Dot(flatRight)
+            
+            local forwardComponent = lookVector * forwardDot
+            local sidewaysComponent = flatRight * rightDot
+            
+            targetVelocity = (forwardComponent + sidewaysComponent).Unit * getgenv().FlySpeed
+        end
+        
+        bodyGyro.cframe = camera.CFrame
+        bodyVelocity.velocity = targetVelocity
+    end)
+end
+
+local function stopFlying()
+    if flyConnection then
+        flyConnection:Disconnect()
+        flyConnection = nil
+    end
+    if bodyVelocity then bodyVelocity:Destroy() end
+    if bodyGyro then bodyGyro:Destroy() end
+    
+    local character = LocalPlayer.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.PlatformStand = false
+        end
+    end
+end
+
+LocalPlayer.CharacterAdded:Connect(function(char)
+    task.wait(0.5)
+    if getgenv().FlyEnabled then
+        startFlying()
+    end
+end)
+
+local flyToggle = homeTab:CreateToggle({
+    name = "Fly Mode",
+    flag = "FlyModeToggle",
+    value = false,
+    callback = function(value)
+        getgenv().FlyEnabled = value
+        if getgenv().FlyEnabled then
+            startFlying()
+        else
+            stopFlying()
+        end
+    end,
+})
+
+local flySpeedSlider = homeTab:CreateSlider({
+    name = "Flight Speed",
+    min = 0,
+    max = 100,
+    increment = 1,
+    default = 50,
+    flag = "FlySpeedSlider",
+    callback = function(value)
+        getgenv().FlySpeed = value
+    end,
+})
+
 homeTab:CreateSlider({ 
     Name = "Walkspeed", 
     Range = { 20, 150 }, 
