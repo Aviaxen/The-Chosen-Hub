@@ -29,9 +29,22 @@ end })
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
 
 getgenv().EspEnabled = false
 getgenv().EspColor = Color3.fromRGB(96, 205, 255) 
+
+local EspGui = Instance.new("ScreenGui")
+EspGui.Name = "Rayfield2D_EspGui"
+EspGui.ResetOnSpawn = false
+EspGui.IgnoreGuiInset = true 
+
+local success, err = pcall(function()
+    EspGui.Parent = game:GetService("CoreGui")
+end)
+if not success then
+    EspGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+end
 
 local function addEsp(player)
     if player == LocalPlayer then return end
@@ -41,6 +54,9 @@ local function addEsp(player)
         
         if character:FindFirstChild("ESPHighlight") then character.ESPHighlight:Destroy() end
         if character:FindFirstChild("ESPNameTag") then character.ESPNameTag:Destroy() end
+        
+        local oldBox = EspGui:FindFirstChild(player.Name .. "_2DBox")
+        if oldBox then oldBox:Destroy() end
         
         local humanoid = character:WaitForChild("Humanoid", 5)
         local head = character:FindFirstChild("Head") or character:FindFirstChildWhichIsA("BasePart")
@@ -76,29 +92,72 @@ local function addEsp(player)
         label.TextYAlignment = Enum.TextYAlignment.Center     
         label.Parent = billboard
         
+        local boxContainer = Instance.new("Frame")
+        boxContainer.Name = player.Name .. "_2DBox"
+        boxContainer.BackgroundTransparency = 1
+        boxContainer.Size = UDim2.new(0, 100, 0, 100)
+        boxContainer.Visible = false
+        boxContainer.Parent = EspGui
+        
+        local stroke = Instance.new("UIStroke")
+        stroke.Thickness = 1.5
+        stroke.Color = getgenv().EspColor
+        stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        stroke.Parent = boxContainer
+        
+        local strokeInline = Instance.new("UIStroke")
+        strokeInline.Thickness = 2.5
+        strokeInline.Color = Color3.fromRGB(0, 0, 0)
+        strokeInline.Transparency = 0.6
+        strokeInline.Parent = boxContainer
+        
         local renderConnection
         renderConnection = RunService.RenderStepped:Connect(function()
             if not getgenv().EspEnabled or not character:IsDescendantOf(workspace) or not LocalPlayer.Character then
+                boxContainer:Destroy()
                 renderConnection:Disconnect()
                 return
             end
             
             local myRoot = LocalPlayer.Character:FindFirstChild("HumanoidRootPart") or LocalPlayer.Character:FindFirstChildWhichIsA("BasePart")
-            if not myRoot or not rootPart:IsDescendantOf(workspace) then return end
+            if not myRoot or not rootPart:IsDescendantOf(workspace) then 
+                boxContainer.Visible = false
+                return 
+            end
             
             highlight.FillColor = getgenv().EspColor
+            stroke.Color = getgenv().EspColor
             
-            local myPos = myRoot.Position
-            local theirPos = rootPart.Position
-            local distance = math.floor((myPos - theirPos).Magnitude)
+            local rootPos, onScreen = Camera:WorldToViewportPoint(rootPart.Position)
             
-            if distance <= 1000 then
-                highlight.Enabled = true
-                billboard.Enabled = true
-                label.Text = player.Name .. "\n[" .. distance .. " studs]"
+            if onScreen then
+                local myPos = myRoot.Position
+                local theirPos = rootPart.Position
+                local distance = math.floor((myPos - theirPos).Magnitude)
+                
+                if distance <= 1000 then
+                    local _, size = character:GetBoundingBox()
+                    
+                    local topPos = Camera:WorldToViewportPoint(rootPart.Position + Vector3.new(0, size.Y / 2, 0))
+                    local bottomPos = Camera:WorldToViewportPoint(rootPart.Position - Vector3.new(0, size.Y / 2, 0))
+                    
+                    local boxHeight = math.abs(topPos.Y - bottomPos.Y)
+                    local boxWidth = boxHeight * 0.65 
+                    
+                    boxContainer.Size = UDim2.new(0, boxWidth, 0, boxHeight)
+                    boxContainer.Position = UDim2.new(0, rootPos.X - (boxWidth / 2), 0, rootPos.Y - (boxHeight / 2))
+                    
+                    highlight.Enabled = true
+                    boxContainer.Visible = true
+                    billboard.Enabled = true
+                    label.Text = player.Name .. "\n[" .. distance .. " studs]"
+                else
+                    highlight.Enabled = false
+                    boxContainer.Visible = false
+                    billboard.Enabled = false
+                end
             else
-                highlight.Enabled = false
-                billboard.Enabled = false
+                boxContainer.Visible = false
             end
         end)
     end
@@ -126,6 +185,7 @@ local espToggle = homeTab:CreateToggle({
                 getgenv().PlayerAddedConnection:Disconnect()
                 getgenv().PlayerAddedConnection = nil
             end
+            
             for _, player in ipairs(Players:GetPlayers()) do
                 if player.Character then
                     if player.Character:FindFirstChild("ESPHighlight") then
@@ -135,6 +195,8 @@ local espToggle = homeTab:CreateToggle({
                         player.Character.ESPNameTag:Destroy()
                     end
                 end
+                local oldBox = EspGui:FindFirstChild(player.Name .. "_2DBox")
+                if oldBox then oldBox:Destroy() end
             end
         end
     end,
@@ -147,6 +209,7 @@ homeTab:CreateColorPicker({
         getgenv().EspColor = color 
     end,
 })
+
 
 
 local Players = game:GetService("Players")
