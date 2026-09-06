@@ -313,6 +313,54 @@ local flyToggle = homeTab:CreateToggle({
     end,
 })
 
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+
+local noclipConnection = nil
+
+local noclipToggle = homeTab:CreateToggle({
+    name = "Noclip",
+    flag = "Noclip",
+    value = false, 
+    callback = function(value)
+        if value then
+            noclipConnection = RunService.Stepped:Connect(function()
+                if LocalPlayer.Character then
+                    for _, part in ipairs(LocalPlayer.Character:GetDescendants()) do
+                        if part:IsA("BasePart") and part.CanCollide then
+                            part.CanCollide = false
+                        end
+                    end
+                end
+            end)
+        else
+            
+            if noclipConnection then
+                noclipConnection:Disconnect()
+                noclipConnection = nil
+            end
+            
+            if LocalPlayer.Character then
+                for _, part in ipairs(LocalPlayer.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = true
+                    end
+                end
+                
+                local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+                    task.wait() 
+                    humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+                end
+            end
+        end
+    end,
+})
+
+noclipToggle:Set(false)
+
 local flySpeedSlider = homeTab:CreateSlider({
     name = "Flight Speed",
     min = 0,
