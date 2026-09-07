@@ -28,145 +28,340 @@ end })
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local RunService = game:GetService("RunService")
-local Camera = workspace.CurrentCamera
 
+-- Initialize your environment global states safely
 getgenv().EspEnabled = false
 getgenv().EspColor = Color3.fromRGB(96, 205, 255) 
+getgenv().ActiveTargets = {}
+getgenv().EspConnections = getgenv().EspConnections or {}
 
+-- Pristine folders for the 2D bounding boxes
 local EspGui = Instance.new("ScreenGui")
 EspGui.Name = "Rayfield2D_EspGui"
 EspGui.ResetOnSpawn = false
 EspGui.IgnoreGuiInset = true 
 
-local success, err = pcall(function()
-    EspGui.Parent = game:GetService("CoreGui")
-end)
-if not success then
-    EspGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+-- Pristine folders for the tracer lines
+local TracerGui = Instance.new("ScreenGui")
+TracerGui.Name = "RayfieldTracers_Gui"
+TracerGui.ResetOnSpawn = false
+TracerGui.IgnoreGuiInset = true
+
+local function safeParent(guiInstance)
+    local success, _ = pcall(function()
+        guiInstance.Parent = game:GetService("CoreGui")
+    end)
+    if not success then
+        guiInstance.Parent = LocalPlayer:WaitForChild("PlayerGui")
+    end
 end
 
-local function addEsp(player)
-    if player == LocalPlayer then return end
+safeParent(EspGui)
+safeParent(TracerGui)
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
+
+local cGui = game:GetService("CoreGui")
+local EspGui = cGui:FindFirstChild("Rayfield2D_EspGui") or LocalPlayer:WaitForChild("PlayerGui"):FindFirstChild("Rayfield2D_EspGui")
+
+getgenv().AddPlayerBoxesAndText = function(player, character)
+    if not EspGui or player == LocalPlayer then return end
     
-    local function applyHighlight(character)
-        if not character then return end
+    if character:FindFirstChild("ESPHighlight") then character.ESPHighlight:Destroy() end
+    if character:FindFirstChild("ESPNameTag") then character.ESPNameTag:Destroy() end
+    
+    local oldBox = EspGui:FindFirstChild(player.Name .. "_2DBox")
+    if oldBox then oldBox:Destroy() end
+    
+    local humanoid = character:WaitForChild("Humanoid", 5)
+    local head = character:FindFirstChild("Head") or character:FindFirstChildWhichIsA("BasePart")
+    local rootPart = character:FindFirstChild("HumanoidRootPart") or (humanoid and humanoid.RootPart) or head
+    if not rootPart or not head then return end
+    
+    -- Create Chams
+    local highlight = Instance.new("Highlight")
+    highlight.Name = "ESPHighlight"
+    highlight.FillColor = getgenv().EspColor            
+    highlight.OutlineColor = Color3.fromRGB(255, 255, 255) 
+    highlight.FillTransparency = 0.5                      
+    highlight.OutlineTransparency = 0                     
+    highlight.Adornee = character
+    highlight.Parent = character
+    highlight.Enabled = false 
+    
+    -- Create an expanded 3D text billboard layer
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "ESPNameTag"
+    billboard.Size = UDim2.new(0, 200, 0, 70)             
+    billboard.StudsOffset = Vector3.new(0, 3.5, 0)          
+    billboard.AlwaysOnTop = true                          
+    billboard.Adornee = head
+    billboard.Parent = character
+    
+    -- TEXT FIX: Use a vertical stack grid layout to hold rows separate
+    local listLayout = Instance.new("UIListLayout")
+    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    listLayout.Padding = UDim.new(0, 2) -- Forced 2-pixel gap between rows
+    listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    listLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    listLayout.Parent = billboard
+    
+    -- Row 1: The Username String
+    local nameLabel = Instance.new("TextLabel")
+    nameLabel.Size = UDim2.new(1, 0, 0, 18)
+    nameLabel.BackgroundTransparency = 1                      
+    nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)      
+    nameLabel.TextSize = 13                                   
+    nameLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)      
+    nameLabel.TextStrokeTransparency = 0                      
+    nameLabel.Font = Enum.Font.SourceSansBold                 
+    nameLabel.Text = player.Name
+    nameLabel.LayoutOrder = 1
+    nameLabel.Parent = billboard
+    
+    -- Row 2: The Distance String
+    local distLabel = Instance.new("TextLabel")
+    distLabel.Size = UDim2.new(1, 0, 0, 16)
+    distLabel.BackgroundTransparency = 1                      
+    distLabel.TextColor3 = Color3.fromRGB(230, 230, 230)      
+    distLabel.TextSize = 12                                   
+    distLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)      
+    distLabel.TextStrokeTransparency = 0                      
+    distLabel.Font = Enum.Font.SourceSansBold                 
+    distLabel.LayoutOrder = 2
+    distLabel.Parent = billboard
+    
+    -- Create 2D Overlay Box
+    local boxContainer = Instance.new("Frame")
+    boxContainer.Name = player.Name .. "_2DBox"
+    boxContainer.BackgroundTransparency = 1
+    boxContainer.Size = UDim2.new(0, 100, 0, 100)
+    boxContainer.Visible = false
+    boxContainer.Parent = EspGui
+    
+    local stroke = Instance.new("UIStroke")
+    stroke.Thickness = 1.5
+    stroke.Color = getgenv().EspColor
+    stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    stroke.Parent = boxContainer
+    
+    local strokeInline = Instance.new("UIStroke")
+    strokeInline.Thickness = 2.5
+    strokeInline.Color = Color3.fromRGB(0, 0, 0)
+    strokeInline.Transparency = 0.6
+    strokeInline.Parent = boxContainer
+    
+    getgenv().ActiveTargets[player.Name] = {
+        Highlight = highlight,
+        Distance = 99999
+    }
+    
+    local renderConnection
+    renderConnection = RunService.RenderStepped:Connect(function()
+        if not getgenv().EspEnabled or not character:IsDescendantOf(workspace) or not LocalPlayer.Character then
+            boxContainer:Destroy()
+            getgenv().ActiveTargets[player.Name] = nil
+            renderConnection:Disconnect()
+            return
+        end
         
-        if character:FindFirstChild("ESPHighlight") then character.ESPHighlight:Destroy() end
-        if character:FindFirstChild("ESPNameTag") then character.ESPNameTag:Destroy() end
+        local myRoot = LocalPlayer.Character:FindFirstChild("HumanoidRootPart") or LocalPlayer.Character:FindFirstChildWhichIsA("BasePart")
+        if not myRoot or not rootPart:IsDescendantOf(workspace) then 
+            boxContainer.Visible = false
+            if getgenv().ActiveTargets[player.Name] then getgenv().ActiveTargets[player.Name].Distance = 99999 end
+            return 
+            end
         
-        local oldBox = EspGui:FindFirstChild(player.Name .. "_2DBox")
-        if oldBox then oldBox:Destroy() end
-        
-        local humanoid = character:WaitForChild("Humanoid", 5)
-        local head = character:FindFirstChild("Head") or character:FindFirstChildWhichIsA("BasePart")
-        local rootPart = character:FindFirstChild("HumanoidRootPart") or (humanoid and humanoid.RootPart) or head
-        
-        if not rootPart or not head then return end
-        
-        local highlight = Instance.new("Highlight")
-        highlight.Name = "ESPHighlight"
-        highlight.FillColor = getgenv().EspColor            
-        highlight.OutlineColor = Color3.fromRGB(255, 255, 255) 
-        highlight.FillTransparency = 0.5                      
-        highlight.OutlineTransparency = 0                     
-        highlight.Adornee = character
-        highlight.Parent = character
-        
-        local billboard = Instance.new("BillboardGui")
-        billboard.Name = "ESPNameTag"
-        billboard.Size = UDim2.new(0, 200, 0, 60)             
-        billboard.StudsOffset = Vector3.new(0, 3, 0)          
-        billboard.AlwaysOnTop = true                          
-        billboard.Adornee = head
-        billboard.Parent = character
-        
-        local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(1, 0, 1, 0)
-        label.BackgroundTransparency = 1                      
-        label.TextColor3 = Color3.fromRGB(255, 255, 255)      
-        label.TextSize = 14                                   
-        label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)      
-        label.TextStrokeTransparency = 0                      
-        label.Font = Enum.Font.SourceSansBold                 
-        label.TextYAlignment = Enum.TextYAlignment.Center     
-        label.Parent = billboard
-        
-        local boxContainer = Instance.new("Frame")
-        boxContainer.Name = player.Name .. "_2DBox"
-        boxContainer.BackgroundTransparency = 1
-        boxContainer.Size = UDim2.new(0, 100, 0, 100)
-        boxContainer.Visible = false
-        boxContainer.Parent = EspGui
-        
-        local stroke = Instance.new("UIStroke")
-        stroke.Thickness = 1.5
+        highlight.FillColor = getgenv().EspColor
         stroke.Color = getgenv().EspColor
-        stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-        stroke.Parent = boxContainer
         
-        local strokeInline = Instance.new("UIStroke")
-        strokeInline.Thickness = 2.5
-        strokeInline.Color = Color3.fromRGB(0, 0, 0)
-        strokeInline.Transparency = 0.6
-        strokeInline.Parent = boxContainer
+        local rootPos, onScreen = Camera:WorldToViewportPoint(rootPart.Position)
         
-        local renderConnection
-        renderConnection = RunService.RenderStepped:Connect(function()
-            if not getgenv().EspEnabled or not character:IsDescendantOf(workspace) or not LocalPlayer.Character then
-                boxContainer:Destroy()
-                renderConnection:Disconnect()
-                return
-            end
+        if onScreen then
+            local distance = math.floor((myRoot.Position - rootPart.Position).Magnitude)
+            if getgenv().ActiveTargets[player.Name] then getgenv().ActiveTargets[player.Name].Distance = distance end
             
-            local myRoot = LocalPlayer.Character:FindFirstChild("HumanoidRootPart") or LocalPlayer.Character:FindFirstChildWhichIsA("BasePart")
-            if not myRoot or not rootPart:IsDescendantOf(workspace) then 
-                boxContainer.Visible = false
-                return 
-            end
-            
-            highlight.FillColor = getgenv().EspColor
-            stroke.Color = getgenv().EspColor
-            
-            local rootPos, onScreen = Camera:WorldToViewportPoint(rootPart.Position)
-            
-            if onScreen then
-                local myPos = myRoot.Position
-                local theirPos = rootPart.Position
-                local distance = math.floor((myPos - theirPos).Magnitude)
+            if distance <= 1000 then
+                local _, size = character:GetBoundingBox()
+                local topPos = Camera:WorldToViewportPoint(rootPart.Position + Vector3.new(0, size.Y / 2, 0))
+                local bottomPos = Camera:WorldToViewportPoint(rootPart.Position - Vector3.new(0, size.Y / 2, 0))
                 
-                if distance <= 1000 then
-                    local _, size = character:GetBoundingBox()
-                    
-                    local topPos = Camera:WorldToViewportPoint(rootPart.Position + Vector3.new(0, size.Y / 2, 0))
-                    local bottomPos = Camera:WorldToViewportPoint(rootPart.Position - Vector3.new(0, size.Y / 2, 0))
-                    
-                    local boxHeight = math.abs(topPos.Y - bottomPos.Y)
-                    local boxWidth = boxHeight * 0.65 
-                    
-                    boxContainer.Size = UDim2.new(0, boxWidth, 0, boxHeight)
-                    boxContainer.Position = UDim2.new(0, rootPos.X - (boxWidth / 2), 0, rootPos.Y - (boxHeight / 2))
-                    
-                    highlight.Enabled = true
-                    boxContainer.Visible = true
-                    billboard.Enabled = true
-                    label.Text = player.Name .. "\n[" .. distance .. " studs]"
-                else
-                    highlight.Enabled = false
-                    boxContainer.Visible = false
-                    billboard.Enabled = false
-                end
+                local boxHeight = math.abs(topPos.Y - bottomPos.Y)
+                local boxWidth = boxHeight * 0.65 
+                
+                boxContainer.Size = UDim2.new(0, boxWidth, 0, boxHeight)
+                boxContainer.Position = UDim2.new(0, rootPos.X - (boxWidth / 2), 0, rootPos.Y - (boxHeight / 2))
+                
+                boxContainer.Visible = true
+                billboard.Enabled = true
+                distLabel.Text = "[" .. distance .. " studs]"
             else
                 boxContainer.Visible = false
+                billboard.Enabled = false
+                if getgenv().ActiveTargets[player.Name] then getgenv().ActiveTargets[player.Name].Distance = 99999 end
             end
-        end)
-    end
-
-    if player.Character then
-        task.spawn(applyHighlight, player.Character)
-    end
-    player.CharacterAdded:Connect(applyHighlight)
+        else
+            boxContainer.Visible = false
+            if getgenv().ActiveTargets[player.Name] then getgenv().ActiveTargets[player.Name].Distance = 99999 end
+        end
+    end)
 end
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
+
+local cGui = game:GetService("CoreGui")
+local TracerGui = cGui:FindFirstChild("RayfieldTracers_Gui") or LocalPlayer:WaitForChild("PlayerGui"):FindFirstChild("RayfieldTracers_Gui")
+
+getgenv().AddPlayerTracers = function(player, character)
+    if not TracerGui or player == LocalPlayer then return end
+    
+    local oldTracer = TracerGui:FindFirstChild(player.Name .. "_Tracer")
+    if oldTracer then oldTracer:Destroy() end
+    
+    local humanoid = character:WaitForChild("Humanoid", 5)
+    local head = character:FindFirstChild("Head") or character:FindFirstChildWhichIsA("BasePart")
+    local rootPart = character:FindFirstChild("HumanoidRootPart") or (humanoid and humanoid.RootPart) or head
+    if not rootPart then return end
+    
+    local tracerContainer = Instance.new("Frame")
+    tracerContainer.Name = player.Name .. "_Tracer"
+    tracerContainer.BackgroundTransparency = 1
+    tracerContainer.Visible = false
+    tracerContainer.Parent = TracerGui
+    
+    local shadowLine = Instance.new("Frame")
+    shadowLine.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    shadowLine.BackgroundTransparency = 0.4
+    shadowLine.BorderSizePixel = 0
+    shadowLine.AnchorPoint = Vector2.new(0.5, 0.5) 
+    shadowLine.Parent = tracerContainer
+    
+    local mainLine = Instance.new("Frame")
+    mainLine.BorderSizePixel = 0
+    mainLine.AnchorPoint = Vector2.new(0.5, 0.5)  
+    mainLine.Parent = tracerContainer
+    
+    local renderConnection
+    renderConnection = RunService.RenderStepped:Connect(function()
+        if not getgenv().EspEnabled or not character:IsDescendantOf(workspace) or not LocalPlayer.Character then
+            tracerContainer:Destroy()
+            renderConnection:Disconnect()
+            return
+        end
+        
+        local myRoot = LocalPlayer.Character:FindFirstChild("HumanoidRootPart") or LocalPlayer.Character:FindFirstChildWhichIsA("BasePart")
+        if not myRoot or not rootPart:IsDescendantOf(workspace) then
+            tracerContainer.Visible = false
+            return
+        end
+        
+        mainLine.BackgroundColor3 = getgenv().EspColor
+        
+        local _, size = character:GetBoundingBox()
+        local feetWorldPosition = rootPart.Position - Vector3.new(0, (size.Y / 2), 0)
+        local tracerPos, tracerOnScreen = Camera:WorldToViewportPoint(feetWorldPosition)
+        
+        if tracerOnScreen then
+            local distance = (myRoot.Position - rootPart.Position).Magnitude
+            
+            if distance <= 1000 then
+                local startX = Camera.ViewportSize.X / 2
+                local startY = Camera.ViewportSize.Y
+                
+                local diffX = tracerPos.X - startX
+                local diffY = tracerPos.Y - startY
+                local tracerDistance = math.sqrt(diffX^2 + diffY^2)
+                local angle = math.atan2(diffY, diffX)
+                
+                local midX = (startX + tracerPos.X) / 2
+                local midY = (startY + tracerPos.Y) / 2
+                
+                mainLine.Size = UDim2.new(0, tracerDistance, 0, 1) 
+                mainLine.Position = UDim2.new(0, midX, 0, midY)
+                mainLine.Rotation = math.deg(angle)
+                
+                shadowLine.Size = UDim2.new(0, tracerDistance, 0, 2.5) 
+                shadowLine.Position = UDim2.new(0, midX, 0, midY)
+                shadowLine.Rotation = math.deg(angle)
+                
+                tracerContainer.Visible = true
+            else
+                tracerContainer.Visible = false
+            end
+        else
+            tracerContainer.Visible = false
+        end
+    end)
+end
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+getgenv().MasterExecutionRoute = function(player)
+    if player == LocalPlayer then return end
+    
+    if getgenv().EspConnections[player.Name] then
+        getgenv().EspConnections[player.Name]:Disconnect()
+        getgenv().EspConnections[player.Name] = nil
+    end
+    
+    local function routeLoad(character)
+        if not character then return end
+        if getgenv().AddPlayerBoxesAndText then getgenv().AddPlayerBoxesAndText(player, character) end
+        if getgenv().AddPlayerTracers then getgenv().AddPlayerTracers(player, character) end
+    end
+    
+    if player.Character then task.spawn(routeLoad, player.Character) end
+    getgenv().EspConnections[player.Name] = player.CharacterAdded:Connect(routeLoad)
+end
+
+getgenv().RefreshCombinedEspAndTracers = function()
+    if not getgenv().EspEnabled then return end
+    local cGui = game:GetService("CoreGui")
+    if cGui:FindFirstChild("Rayfield2D_EspGui") then cGui.Rayfield2D_EspGui:ClearAllChildren() end
+    if cGui:FindFirstChild("RayfieldTracers_Gui") then cGui.RayfieldTracers_Gui:ClearAllChildren() end
+    getgenv().ActiveTargets = {}
+    
+    for _, player in ipairs(Players:GetPlayers()) do
+        if getgenv().MasterExecutionRoute then getgenv().MasterExecutionRoute(player) end
+    end
+end
+
+if getgenv().EspPriorityThread then task.cancel(getgenv().EspPriorityThread) end
+getgenv().EspPriorityThread = task.spawn(function()
+    while task.wait(0.1) do
+        if getgenv().EspEnabled and getgenv().ActiveTargets then
+            local list = {}
+            for name, data in pairs(getgenv().ActiveTargets) do table.insert(list, {Name = name, Data = data}) end
+            table.sort(list, function(a, b) return a.Data.Distance < b.Data.Distance end)
+            for i, item in ipairs(list) do
+                if item.Data.Highlight and item.Data.Highlight:IsDescendantOf(game) then
+                    item.Data.Highlight.Enabled = (i <= 28 and item.Data.Distance <= 1000)
+                end
+            end
+        end
+    end
+end)
+
+if getgenv().EspPulseThread then task.cancel(getgenv().EspPulseThread) end
+getgenv().EspPulseThread = task.spawn(function()
+    while true do
+        task.wait(30)
+        if getgenv().EspEnabled and getgenv().RefreshCombinedEspAndTracers then getgenv().RefreshCombinedEspAndTracers() end
+    end
+end)
+
+if getgenv().EspResetConnection then getgenv().EspResetConnection:Disconnect() end
+getgenv().EspResetConnection = LocalPlayer.CharacterAdded:Connect(function()
+    task.wait(0.5)
+    if getgenv().RefreshCombinedEspAndTracers then getgenv().RefreshCombinedEspAndTracers() end
+end)
 
 local espToggle = homeTab:CreateToggle({
     name = "Player ESP",
@@ -174,30 +369,27 @@ local espToggle = homeTab:CreateToggle({
     value = false,
     callback = function(value)
         getgenv().EspEnabled = value
-        
         if getgenv().EspEnabled then
-            for _, player in ipairs(Players:GetPlayers()) do
-                addEsp(player)
-            end
-            getgenv().PlayerAddedConnection = Players.PlayerAdded:Connect(addEsp)
+            if getgenv().RefreshCombinedEspAndTracers then getgenv().RefreshCombinedEspAndTracers() end
+            getgenv().PlayerAddedConnection = Players.PlayerAdded:Connect(function(p)
+                if getgenv().MasterExecutionRoute then getgenv().MasterExecutionRoute(p) end
+            end)
         else
-            if getgenv().PlayerAddedConnection then
-                getgenv().PlayerAddedConnection:Disconnect()
-                getgenv().PlayerAddedConnection = nil
+            if getgenv().PlayerAddedConnection then getgenv().PlayerAddedConnection:Disconnect() getgenv().PlayerAddedConnection = nil end
+            if getgenv().EspConnections then
+                for _, conn in pairs(getgenv().EspConnections) do if conn then conn:Disconnect() end end
+                getgenv().EspConnections = {}
             end
-            
+            getgenv().ActiveTargets = {}
             for _, player in ipairs(Players:GetPlayers()) do
                 if player.Character then
-                    if player.Character:FindFirstChild("ESPHighlight") then
-                        player.Character.ESPHighlight:Destroy()
-                    end
-                    if player.Character:FindFirstChild("ESPNameTag") then
-                        player.Character.ESPNameTag:Destroy()
-                    end
+                    if player.Character:FindFirstChild("ESPHighlight") then player.Character.ESPHighlight:Destroy() end
+                    if player.Character:FindFirstChild("ESPNameTag") then player.Character.ESPNameTag:Destroy() end
                 end
-                local oldBox = EspGui:FindFirstChild(player.Name .. "_2DBox")
-                if oldBox then oldBox:Destroy() end
             end
+            local canvas = game:GetService("CoreGui")
+            if canvas:FindFirstChild("Rayfield2D_EspGui") then canvas.Rayfield2D_EspGui:ClearAllChildren() end
+            if canvas:FindFirstChild("RayfieldTracers_Gui") then canvas.RayfieldTracers_Gui:ClearAllChildren() end
         end
     end,
 })
@@ -205,11 +397,8 @@ local espToggle = homeTab:CreateToggle({
 homeTab:CreateColorPicker({
     name = "Highlight Color",
     color = Color3.fromRGB(96, 205, 255),
-    callback = function(color, alpha)
-        getgenv().EspColor = color 
-    end,
+    callback = function(color, alpha) getgenv().EspColor = color end,
 })
-
 
 
 local Players = game:GetService("Players")
