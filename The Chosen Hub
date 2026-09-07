@@ -841,23 +841,18 @@ local LocalPlayer = Players.LocalPlayer
 
 getgenv().KillCount = 0
 
--- 1. Create the Rayfield Stat Display (Manually overridden to hide the percentage bar)
 local killStat = homeTab:CreateStat({
     name = "Total Kills",
     prefix = "☠️ ",
     value = getgenv().KillCount,
-    maxValue = 99999 -- FIX: Setting a massive max value completely hides the percentage bar and fixes the lock-up!
+    maxValue = 99999 
 })
 
--- Safe function to update the UI counter without errors
 local function updateKillUI(newAmount)
     getgenv().KillCount = newAmount
     killStat:Set(getgenv().KillCount)
 end
 
--- ==========================================
--- LAYER 1: UNIVERSAL LEADERSTATS MONITOR
--- ==========================================
 local function trackLeaderstats(leaderstats)
     local killKeywords = {"kills", "kos", "wipeouts", "knockouts", "frags", "defeats", "streaks"}
     
@@ -900,9 +895,6 @@ local function setupLocalPlayerStats()
 end
 task.spawn(setupLocalPlayerStats)
 
--- ==========================================
--- LAYER 2 & 3: TAGS & PROXIMITY ENGINE
--- ==========================================
 local function monitorEnemyDefeats(targetPlayer)
     if targetPlayer == LocalPlayer then return end
     
@@ -916,14 +908,12 @@ local function monitorEnemyDefeats(targetPlayer)
             task.wait(0.05) 
             if getgenv().KillCount > initialKills then return end 
             
-            -- Classic Creator Tag Checking
             local creatorTag = humanoid:FindFirstChild("creator") or humanoid:FindFirstChild("killer")
             if creatorTag and (creatorTag.Value == LocalPlayer or creatorTag.Value == LocalPlayer.Name) then
                 updateKillUI(getgenv().KillCount + 1)
                 return
             end
             
-            -- Proximity Combat Fallback Check
             if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                 local myRoot = LocalPlayer.Character.HumanoidRootPart
                 local distance = (myRoot.Position - rootPart.Position).Magnitude
@@ -939,8 +929,6 @@ for _, player in ipairs(Players:GetPlayers()) do
     monitorEnemyDefeats(player)
 end
 Players.PlayerAdded:Connect(monitorEnemyDefeats)
-
-
 
 local scriptsTab = window:CreateTab({ Name = "Scripts", Icon = 0 })
 
@@ -1196,6 +1184,10 @@ end })
 
 hubsTab:CreateButton({ Name = "Dfxclan Hub", Callback = function() 
     loadstring(game:HttpGet("https://pastebin.com/raw/HK1Xpajw"))() 
+end })
+
+hubsTab:CreateButton({ Name = "DfxClan 1.5 Hub", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/yxz3gVRq"))()
 end })
 
 hubsTab:CreateButton({ Name = "Degent Hub", Callback = function() 
