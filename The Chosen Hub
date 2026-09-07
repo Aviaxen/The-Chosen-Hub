@@ -400,6 +400,136 @@ homeTab:CreateColorPicker({
     callback = function(color, alpha) getgenv().EspColor = color end,
 })
 
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+
+getgenv().ChamsEnabled = false
+getgenv().ChamsColor = Color3.fromRGB(96, 205, 255)
+
+local ChamsTargets = {}
+local ChamsConnections = {}
+
+local function addChams(player)
+    if player == LocalPlayer then return end
+    
+    if ChamsConnections[player.Name] then
+        ChamsConnections[player.Name]:Disconnect()
+        ChamsConnections[player.Name] = nil
+    end
+    
+    local function applyChams(character)
+        if not character then return end
+        
+        if character:FindFirstChild("SoloChamsHighlight") then 
+            character.SoloChamsHighlight:Destroy() 
+        end
+        
+        local humanoid = character:WaitForChild("Humanoid", 5)
+        local head = character:FindFirstChild("Head") or character:FindFirstChildWhichIsA("BasePart")
+        local rootPart = character:FindFirstChild("HumanoidRootPart") or (humanoid and humanoid.RootPart) or head
+        if not rootPart then return end
+        
+        local highlight = Instance.new("Highlight")
+        highlight.Name = "SoloChamsHighlight"
+        highlight.FillColor = getgenv().ChamsColor            
+        highlight.OutlineColor = Color3.fromRGB(255, 255, 255) 
+        highlight.FillTransparency = 0.5                      
+        highlight.OutlineTransparency = 0                     
+        highlight.Adornee = character
+        highlight.Parent = character
+        highlight.Enabled = false 
+        
+        ChamsTargets[player.Name] = {
+            Highlight = highlight,
+            Root = rootPart,
+            Distance = 99999
+        }
+    end
+    
+    if player.Character then task.spawn(applyChams, player.Character) end
+    ChamsConnections[player.Name] = player.CharacterAdded:Connect(applyChams)
+end
+
+local function refreshAllChams()
+    if not getgenv().ChamsEnabled then return end
+    ChamsTargets = {}
+    
+    for _, player in ipairs(Players:GetPlayers()) do
+        addChams(player)
+    end
+end
+
+task.spawn(function()
+    while task.wait(0.1) do
+        if getgenv().ChamsEnabled and LocalPlayer.Character then
+            local myRoot = LocalPlayer.Character:FindFirstChild("HumanoidRootPart") or LocalPlayer.Character:FindFirstChildWhichIsA("BasePart")
+            
+            if myRoot then
+                local list = {}
+                for name, data in pairs(ChamsTargets) do
+                    if data.Root and data.Root:IsDescendantOf(workspace) then
+                        data.Distance = math.floor((myRoot.Position - data.Root.Position).Magnitude)
+                        table.insert(list, {Name = name, Data = data})
+                    end
+                end
+                
+                table.sort(list, function(a, b) return a.Data.Distance < b.Data.Distance end)
+                
+                for index, item in ipairs(list) do
+                    if item.Data.Highlight and item.Data.Highlight:IsDescendantOf(game) then
+                        item.Data.Highlight.FillColor = getgenv().ChamsColor
+                        item.Data.Highlight.Enabled = (index <= 28 and item.Data.Distance <= 1000)
+                    end
+                end
+            end
+        end
+    end
+end)
+
+task.spawn(function()
+    while true do
+        task.wait(30)
+        if getgenv().ChamsEnabled then
+            refreshAllChams()
+        end
+    end
+end)
+
+LocalPlayer.CharacterAdded:Connect(function()
+    task.wait(0.5)
+    if getgenv().ChamsEnabled then refreshAllChams() end
+end)
+
+local chamsToggle = homeTab:CreateToggle({
+    name = "Player Chams",
+    flag = "PlayerChams",
+    value = false,
+    callback = function(value)
+        getgenv().ChamsEnabled = value
+        
+        if getgenv().ChamsEnabled then
+            refreshAllChams()
+            getgenv().ChamsPlayerAddedConn = Players.PlayerAdded:Connect(addChams)
+        else
+            if getgenv().ChamsPlayerAddedConn then 
+                getgenv().ChamsPlayerAddedConn:Disconnect() 
+                getgenv().ChamsPlayerAddedConn = nil 
+            end
+            for _, conn in pairs(ChamsConnections) do if conn then conn:Disconnect() end end
+            ChamsConnections = {}
+            ChamsTargets = {}
+            
+            for _, player in ipairs(Players:GetPlayers()) do
+                if player.Character and player.Character:FindFirstChild("SoloChamsHighlight") then
+                    player.Character.SoloChamsHighlight:Destroy()
+                end
+            end
+        end
+    end,
+})
+
+chamsToggle:Set(false)
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -408,9 +538,9 @@ local RunService = game:GetService("RunService")
 getgenv().FlyEnabled = false
 getgenv().FlySpeed = 50 
 
-local flyConnection
-local bodyVelocity
-local bodyGyro
+local flyConnection = nil
+local bodyVelocity = nil
+local bodyGyro = nil
 
 local function startFlying()
     local character = LocalPlayer.Character
@@ -419,7 +549,9 @@ local function startFlying()
     local humanoid = character:WaitForChild("Humanoid", 5)
     if not rootPart or not humanoid then return end
     
-    humanoid.PlatformStand = true
+    if bodyVelocity then bodyVelocity:Destroy() end
+    if bodyGyro then bodyGyro:Destroy() end
+    if flyConnection then flyConnection:Disconnect() end
     
     bodyGyro = Instance.new("BodyGyro")
     bodyGyro.P = 9e4
@@ -433,30 +565,37 @@ local function startFlying()
     bodyVelocity.Parent = rootPart
     
     flyConnection = RunService.RenderStepped:Connect(function()
-        if not getgenv().FlyEnabled or not character:IsDescendantOf(workspace) or not rootPart then
-            if flyConnection then flyConnection:Disconnect() end
+        if not getgenv().FlyEnabled or not character:IsDescendantOf(workspace) or not rootPart:IsDescendantOf(workspace) then
+            if flyConnection then flyConnection:Disconnect() flyConnection = nil end
             return
         end
 
         local camera = workspace.CurrentCamera
+        local targetVelocity = Vector3.new(0, 0, 0)
+        
         local moveDirection = humanoid.MoveDirection
         
-        local targetVelocity = Vector3.new(0, 0, 0)
-
         if moveDirection.Magnitude > 0 then
-            local lookVector = camera.CFrame.LookVector
             
-            local flatLook = Vector3.new(lookVector.X, 0, lookVector.Z).Unit
-            local rightVector = camera.CFrame.RightVector
-            local flatRight = Vector3.new(rightVector.X, 0, rightVector.Z).Unit
+            local cameraLook = camera.CFrame.LookVector
+            local flatLook = Vector3.new(cameraLook.X, 0, cameraLook.Z).Unit
             
-            local forwardDot = moveDirection:Dot(flatLook)
-            local rightDot = moveDirection:Dot(flatRight)
+            local cameraRight = camera.CFrame.RightVector
+            local flatRight = Vector3.new(cameraRight.X, 0, cameraRight.Z).Unit
             
-            local forwardComponent = lookVector * forwardDot
-            local sidewaysComponent = flatRight * rightDot
+            local forwardAmount = moveDirection:Dot(flatLook)
+            local rightAmount = moveDirection:Dot(flatRight)
             
-            targetVelocity = (forwardComponent + sidewaysComponent).Unit * getgenv().FlySpeed
+            local verticalForce = 0
+            if math.abs(forwardAmount) > 0.1 then
+                verticalForce = cameraLook.Y * forwardAmount
+            end
+            
+            local rawCombinedDirection = (flatLook * forwardAmount) + (flatRight * rightAmount) + Vector3.new(0, verticalForce, 0)
+            
+            if rawCombinedDirection.Magnitude > 0 then
+                targetVelocity = rawCombinedDirection.Unit * getgenv().FlySpeed
+            end
         end
         
         bodyGyro.cframe = camera.CFrame
@@ -465,27 +604,15 @@ local function startFlying()
 end
 
 local function stopFlying()
-    if flyConnection then
-        flyConnection:Disconnect()
-        flyConnection = nil
-    end
-    if bodyVelocity then bodyVelocity:Destroy() end
-    if bodyGyro then bodyGyro:Destroy() end
-    
-    local character = LocalPlayer.Character
-    if character then
-        local humanoid = character:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid.PlatformStand = false
-        end
-    end
+    if flyConnection then flyConnection:Disconnect() flyConnection = nil end
+    if bodyVelocity then bodyVelocity:Destroy() bodyVelocity = nil end
+    if bodyGyro then bodyGyro:Destroy() bodyGyro = nil end
 end
 
-LocalPlayer.CharacterAdded:Connect(function(char)
+if getgenv().FlyResetConnection then getgenv().FlyResetConnection:Disconnect() end
+getgenv().FlyResetConnection = LocalPlayer.CharacterAdded:Connect(function()
     task.wait(0.5)
-    if getgenv().FlyEnabled then
-        startFlying()
-    end
+    if getgenv().FlyEnabled then startFlying() end
 end)
 
 local flyToggle = homeTab:CreateToggle({
@@ -552,19 +679,19 @@ noclipToggle:Set(false)
 
 local flySpeedSlider = homeTab:CreateSlider({
     name = "Flight Speed",
-    min = 0,
-    max = 100,
-    increment = 1,
-    default = 50,
-    flag = "FlySpeedSlider",
-    callback = function(value)
+    Info = "Adjust your flight movement speed",
+    Range = {0, 250}, 
+    Increment = 1,
+    CurrentValue = 50, 
+    Flag = "FlySpeedSlider",
+    Callback = function(value)
         getgenv().FlySpeed = value
     end,
 })
 
 homeTab:CreateSlider({ 
     Name = "Walkspeed", 
-    Range = { 20, 150 }, 
+    Range = { 20, 250 }, 
     Increment = 1, 
     CurrentValue = 16, 
     Suffix = " studs", 
