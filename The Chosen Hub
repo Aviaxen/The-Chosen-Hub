@@ -31,7 +31,6 @@ local RunService = game:GetService("RunService")
 
 local LocalPlayer = Players.LocalPlayer
 
--- ESP starts OFF
 getgenv().EspEnabled = false
 getgenv().EspColor = Color3.fromRGB(96, 205, 255)
 getgenv().ESPData = getgenv().ESPData or {}
@@ -172,7 +171,6 @@ local function createESP(player, character)
     local rootPart, head = getAvatarParts(character)
 
     if not rootPart or not head then
-        -- Give custom avatars time to finish loading.
         task.delay(0.5, function()
             if getgenv().EspEnabled
                 and player.Character == character
@@ -198,8 +196,7 @@ local function createESP(player, character)
     data.RootPart = rootPart
     data.Head = head
     data.Humanoid = humanoid
-
-    -- Highlight
+    
     local highlight = Instance.new("Highlight")
     highlight.Name = "ESPHighlight"
     highlight.Adornee = character
@@ -212,8 +209,7 @@ local function createESP(player, character)
     highlight.Parent = character
 
     data.Highlight = highlight
-
-    -- Name/distance Billboard
+    
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "ESPInfo"
     billboard.Adornee = head
@@ -247,8 +243,7 @@ local function createESP(player, character)
     distanceLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
     distanceLabel.TextStrokeTransparency = 0
     distanceLabel.Parent = billboard
-
-    -- 2D box
+    
     local box = Instance.new("Frame")
     box.Name = player.Name .. "_ESPBox"
     box.BackgroundTransparency = 1
@@ -262,8 +257,7 @@ local function createESP(player, character)
     boxStroke.Thickness = 1.5
     boxStroke.Color = getgenv().EspColor
     boxStroke.Parent = box
-
-    -- Tracer container
+    
     local tracer = Instance.new("Frame")
     tracer.Name = player.Name .. "_ESPTracer"
     tracer.BackgroundTransparency = 1
@@ -273,8 +267,7 @@ local function createESP(player, character)
     tracer.Parent = TracerGui
 
     data.Tracer = tracer
-
-    -- Shadow FIRST so it stays behind the colored line
+    
     local tracerShadow = Instance.new("Frame")
     tracerShadow.Name = "Shadow"
     tracerShadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -283,8 +276,7 @@ local function createESP(player, character)
     tracerShadow.AnchorPoint = Vector2.new(0.5, 0.5)
     tracerShadow.ZIndex = 1
     tracerShadow.Parent = tracer
-
-    -- Colored tracer SECOND so it stays bright
+    
     local tracerLine = Instance.new("Frame")
     tracerLine.Name = "Line"
     tracerLine.BackgroundColor3 = getgenv().EspColor
@@ -312,8 +304,7 @@ local function createESP(player, character)
             tracer.Visible = false
             return
         end
-
-        -- Reacquire parts in case the custom avatar changes.
+        
         local currentRoot, currentHead = getAvatarParts(character)
 
         if currentRoot then
@@ -386,8 +377,7 @@ local function createESP(player, character)
             tracer.Visible = false
             return
         end
-
-        -- Calculate top/bottom from entire avatar.
+        
         local topWorld =
             boundsCenter +
             Vector3.new(0, boundingSize.Y / 2, 0)
@@ -428,8 +418,7 @@ local function createESP(player, character)
 
             box.Visible = true
         end
-
-        -- Tracer endpoint
+         
         local feetScreen, feetVisible =
             camera:WorldToViewportPoint(bottomWorld)
 
@@ -466,8 +455,7 @@ local function createESP(player, character)
 
         local centerY =
             (startY + endY) / 2
-
-        -- Bright colored line
+        
         tracerLine.Size =
             UDim2.fromOffset(lineLength, 2)
 
@@ -475,8 +463,7 @@ local function createESP(player, character)
             UDim2.fromOffset(centerX, centerY)
 
         tracerLine.Rotation = angle
-
-        -- Subtle shadow/outline
+        
         tracerShadow.Size =
             UDim2.fromOffset(lineLength, 4)
 
@@ -508,8 +495,7 @@ local function setupPlayer(player)
 
     data.CharacterConnection =
         player.CharacterAdded:Connect(function(character)
-
-            -- Wait for custom avatars to finish loading.
+            
             local deadline = os.clock() + 5
 
             repeat
@@ -567,7 +553,6 @@ local function setupPlayer(player)
     end
 end
 
--- Enable ESP manually
 getgenv().EnableESP = function()
     getgenv().EspEnabled = true
 
@@ -578,7 +563,6 @@ getgenv().EnableESP = function()
     end
 end
 
--- Disable ESP manually
 getgenv().DisableESP = function()
     getgenv().EspEnabled = false
 
@@ -587,7 +571,6 @@ getgenv().DisableESP = function()
     end
 end
 
--- Refresh ESP
 getgenv().RefreshESP = function()
     if not getgenv().EspEnabled then
         return
@@ -627,11 +610,6 @@ LocalPlayer.CharacterAdded:Connect(function()
     end
 end)
 
--- IMPORTANT:
--- Do NOT enable ESP here.
--- It starts OFF until EnableESP() is called.
-
-
 local espToggle = homeTab:CreateToggle({
     name = "Player ESP",
     flag = "PlayerESP",
@@ -653,16 +631,85 @@ homeTab:CreateColorPicker({
     end,
 })
 
-
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local RunService = game:GetService("RunService")
 
 getgenv().ChamsEnabled = false
 getgenv().ChamsColor = Color3.fromRGB(96, 205, 255)
 
 local ChamsTargets = {}
 local ChamsConnections = {}
+
+local function removeChams(player)
+    local data = ChamsTargets[player.Name]
+
+    if data and data.Highlight then
+        data.Highlight:Destroy()
+    end
+
+    ChamsTargets[player.Name] = nil
+
+    if ChamsConnections[player.Name] then
+        ChamsConnections[player.Name]:Disconnect()
+        ChamsConnections[player.Name] = nil
+    end
+end
+
+local function applyChams(player, character)
+    if player == LocalPlayer then return end
+    if not character then return end
+    if not getgenv().ChamsEnabled then return end
+    
+    local oldData = ChamsTargets[player.Name]
+    if oldData and oldData.Highlight then
+        oldData.Highlight:Destroy()
+    end
+
+    ChamsTargets[player.Name] = nil
+    
+    local humanoid = character:WaitForChild("Humanoid", 5)
+    if not humanoid then return end
+
+    local rootPart = character:WaitForChild("HumanoidRootPart", 5)
+        or humanoid.RootPart
+        or character:FindFirstChildWhichIsA("BasePart")
+
+    if not rootPart then return end
+    
+    if not character:IsDescendantOf(workspace) then
+        return
+    end
+
+    local highlight = Instance.new("Highlight")
+    highlight.Name = "SoloChamsHighlight"
+    highlight.FillColor = getgenv().ChamsColor
+    highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+    highlight.FillTransparency = 0.5
+    highlight.OutlineTransparency = 0
+    highlight.Adornee = character
+    highlight.Parent = character
+    highlight.Enabled = false
+
+    ChamsTargets[player.Name] = {
+        Player = player,
+        Character = character,
+        Highlight = highlight,
+        Root = rootPart,
+        Distance = 99999
+    }
+    
+    humanoid.Died:Connect(function()
+        if ChamsTargets[player.Name]
+            and ChamsTargets[player.Name].Character == character then
+
+            ChamsTargets[player.Name] = nil
+
+            if highlight then
+                highlight:Destroy()
+            end
+        end
+    end)
+end
 
 local function addChams(player)
     if player == LocalPlayer then return end
@@ -672,68 +719,81 @@ local function addChams(player)
         ChamsConnections[player.Name] = nil
     end
     
-    local function applyChams(character)
-        if not character then return end
-        
-        if character:FindFirstChild("SoloChamsHighlight") then 
-            character.SoloChamsHighlight:Destroy() 
-        end
-        
-        local humanoid = character:WaitForChild("Humanoid", 5)
-        local head = character:FindFirstChild("Head") or character:FindFirstChildWhichIsA("BasePart")
-        local rootPart = character:FindFirstChild("HumanoidRootPart") or (humanoid and humanoid.RootPart) or head
-        if not rootPart then return end
-        
-        local highlight = Instance.new("Highlight")
-        highlight.Name = "SoloChamsHighlight"
-        highlight.FillColor = getgenv().ChamsColor            
-        highlight.OutlineColor = Color3.fromRGB(255, 255, 255) 
-        highlight.FillTransparency = 0.5                      
-        highlight.OutlineTransparency = 0                     
-        highlight.Adornee = character
-        highlight.Parent = character
-        highlight.Enabled = false 
-        
-        ChamsTargets[player.Name] = {
-            Highlight = highlight,
-            Root = rootPart,
-            Distance = 99999
-        }
+    if player.Character then
+        task.spawn(function()
+            applyChams(player, player.Character)
+        end)
     end
     
-    if player.Character then task.spawn(applyChams, player.Character) end
-    ChamsConnections[player.Name] = player.CharacterAdded:Connect(applyChams)
+    ChamsConnections[player.Name] = player.CharacterAdded:Connect(function(character)
+        if not getgenv().ChamsEnabled then return end
+        
+        task.wait(0.2)
+
+        if getgenv().ChamsEnabled then
+            applyChams(player, character)
+        end
+    end)
 end
 
 local function refreshAllChams()
     if not getgenv().ChamsEnabled then return end
+    
+    for _, data in pairs(ChamsTargets) do
+        if data.Highlight then
+            data.Highlight:Destroy()
+        end
+    end
+
     ChamsTargets = {}
     
     for _, player in ipairs(Players:GetPlayers()) do
-        addChams(player)
+        if player ~= LocalPlayer then
+            addChams(player)
+        end
     end
 end
 
 task.spawn(function()
     while task.wait(0.1) do
         if getgenv().ChamsEnabled and LocalPlayer.Character then
-            local myRoot = LocalPlayer.Character:FindFirstChild("HumanoidRootPart") or LocalPlayer.Character:FindFirstChildWhichIsA("BasePart")
-            
+            local myRoot =
+                LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                or LocalPlayer.Character:FindFirstChildWhichIsA("BasePart")
+
             if myRoot then
                 local list = {}
+
                 for name, data in pairs(ChamsTargets) do
-                    if data.Root and data.Root:IsDescendantOf(workspace) then
-                        data.Distance = math.floor((myRoot.Position - data.Root.Position).Magnitude)
-                        table.insert(list, {Name = name, Data = data})
+                    if data.Root
+                        and data.Highlight
+                        and data.Root:IsDescendantOf(workspace)
+                        and data.Character
+                        and data.Character:IsDescendantOf(workspace) then
+
+                        data.Distance =
+                            math.floor((myRoot.Position - data.Root.Position).Magnitude)
+
+                        table.insert(list, {
+                            Name = name,
+                            Data = data
+                        })
                     end
                 end
-                
-                table.sort(list, function(a, b) return a.Data.Distance < b.Data.Distance end)
-                
+
+                table.sort(list, function(a, b)
+                    return a.Data.Distance < b.Data.Distance
+                end)
+
                 for index, item in ipairs(list) do
-                    if item.Data.Highlight and item.Data.Highlight:IsDescendantOf(game) then
-                        item.Data.Highlight.FillColor = getgenv().ChamsColor
-                        item.Data.Highlight.Enabled = (index <= 28 and item.Data.Distance <= 1000)
+                    local highlight = item.Data.Highlight
+
+                    if highlight and highlight:IsDescendantOf(game) then
+                        highlight.FillColor = getgenv().ChamsColor
+
+                        highlight.Enabled =
+                            index <= 28
+                            and item.Data.Distance <= 1000
                     end
                 end
             end
@@ -742,43 +802,60 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    while true do
-        task.wait(30)
+    while task.wait(30) do
         if getgenv().ChamsEnabled then
             refreshAllChams()
         end
     end
 end)
 
-LocalPlayer.CharacterAdded:Connect(function()
+LocalPlayer.CharacterAdded:Connect(function(character)
+    if not getgenv().ChamsEnabled then return end
+    
+    character:WaitForChild("Humanoid", 5)
     task.wait(0.5)
-    if getgenv().ChamsEnabled then refreshAllChams() end
+
+    if getgenv().ChamsEnabled then
+        refreshAllChams()
+    end
+end)
+
+Players.PlayerAdded:Connect(function(player)
+    if getgenv().ChamsEnabled then
+        addChams(player)
+    end
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+    removeChams(player)
 end)
 
 local chamsToggle = homeTab:CreateToggle({
     name = "Player Chams",
     flag = "PlayerChams",
     value = false,
+
     callback = function(value)
         getgenv().ChamsEnabled = value
-        
-        if getgenv().ChamsEnabled then
+
+        if value then
             refreshAllChams()
-            getgenv().ChamsPlayerAddedConn = Players.PlayerAdded:Connect(addChams)
         else
-            if getgenv().ChamsPlayerAddedConn then 
-                getgenv().ChamsPlayerAddedConn:Disconnect() 
-                getgenv().ChamsPlayerAddedConn = nil 
-            end
-            for _, conn in pairs(ChamsConnections) do if conn then conn:Disconnect() end end
-            ChamsConnections = {}
-            ChamsTargets = {}
-            
-            for _, player in ipairs(Players:GetPlayers()) do
-                if player.Character and player.Character:FindFirstChild("SoloChamsHighlight") then
-                    player.Character.SoloChamsHighlight:Destroy()
+            for _, conn in pairs(ChamsConnections) do
+                if conn then
+                    conn:Disconnect()
                 end
             end
+
+            ChamsConnections = {}
+            
+            for _, data in pairs(ChamsTargets) do
+                if data.Highlight then
+                    data.Highlight:Destroy()
+                end
+            end
+
+            ChamsTargets = {}
         end
     end,
 })
@@ -964,7 +1041,7 @@ getgenv().KillCount = 0
 
 local killStat = homeTab:CreateStat({
     name = "Total Kills",
-    prefix = "☠️ ",
+    prefix = "",
     value = getgenv().KillCount,
     maxValue = 99999 
 })
@@ -974,8 +1051,11 @@ local function updateKillUI(newAmount)
     killStat:Set(getgenv().KillCount)
 end
 
-local function trackLeaderstats(leaderstats)
-    local killKeywords = {"kills", "kos", "wipeouts", "knockouts", "frags", "defeats", "streaks"}
+local cachedHealth = {}
+local processedVictims = {}
+
+local function trackLeaderstats(folder)
+    local killKeywords = {"kills", "kos", "wipeouts", "knockouts", "frags", "defeats", "streaks", "bounty"}
     
     local function checkValue(child)
         if child:IsA("ValueBase") then
@@ -983,8 +1063,10 @@ local function trackLeaderstats(leaderstats)
             for _, keyword in ipairs(killKeywords) do
                 if childName:find(keyword) then
                     child.Changed:Connect(function(newValue)
-                        if newValue > getgenv().KillCount then
-                            updateKillUI(newValue)
+                        if newValue == 0 then
+                            updateKillUI(0) 
+                        elseif newValue > getgenv().KillCount then
+                            updateKillUI(newValue) 
                         end
                     end)
                     if child.Value > getgenv().KillCount then
@@ -995,61 +1077,61 @@ local function trackLeaderstats(leaderstats)
             end
         end
     end
-
-    for _, child in ipairs(leaderstats:GetChildren()) do
-        checkValue(child)
-    end
-    leaderstats.ChildAdded:Connect(checkValue)
+    for _, child in ipairs(folder:GetChildren()) do checkValue(child) end
+    folder.ChildAdded:Connect(checkValue)
 end
 
 local function setupLocalPlayerStats()
-    local leaderstats = LocalPlayer:WaitForChild("leaderstats", 5)
-    if leaderstats then
-        trackLeaderstats(leaderstats)
-    else
-        LocalPlayer.ChildAdded:Connect(function(child)
-            if child.Name == "leaderstats" then
-                trackLeaderstats(child)
-            end
-        end)
+    local function onChildAdded(child)
+        if child.Name == "leaderstats" then trackLeaderstats(child) end
     end
+    local currentLeaderstats = LocalPlayer:FindFirstChild("leaderstats")
+    if currentLeaderstats then trackLeaderstats(currentLeaderstats) end
+    LocalPlayer.ChildAdded:Connect(onChildAdded)
 end
 task.spawn(setupLocalPlayerStats)
 
-local function monitorEnemyDefeats(targetPlayer)
-    if targetPlayer == LocalPlayer then return end
-    
-    targetPlayer.CharacterAdded:Connect(function(character)
-        local humanoid = character:WaitForChild("Humanoid", 5)
-        local rootPart = character:WaitForChild("HumanoidRootPart", 5)
-        if not humanoid or not rootPart then return end
+task.spawn(function()
+    while task.wait(0.1) do 
+        local myChar = LocalPlayer.Character
+        local myRoot = myChar and myChar:FindFirstChild("HumanoidRootPart")
         
-        humanoid.Died:Connect(function()
-            local initialKills = getgenv().KillCount
-            task.wait(0.05) 
-            if getgenv().KillCount > initialKills then return end 
-            
-            local creatorTag = humanoid:FindFirstChild("creator") or humanoid:FindFirstChild("killer")
-            if creatorTag and (creatorTag.Value == LocalPlayer or creatorTag.Value == LocalPlayer.Name) then
-                updateKillUI(getgenv().KillCount + 1)
-                return
-            end
-            
-            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                local myRoot = LocalPlayer.Character.HumanoidRootPart
-                local distance = (myRoot.Position - rootPart.Position).Magnitude
-                if distance <= 12 then
-                    updateKillUI(getgenv().KillCount + 1)
+        if myRoot then
+            for _, player in ipairs(Players:GetPlayers()) do
+                if player ~= LocalPlayer then
+                    local char = player.Character
+                    local hum = char and char:FindFirstChildOfClass("Humanoid")
+                    local root = char and char:FindFirstChild("HumanoidRootPart")
+                    
+                    if hum and root then
+                        local pName = player.Name
+                        local currentHealth = hum.Health
+                        local previousHealth = cachedHealth[pName] or 100
+                        
+                        cachedHealth[pName] = currentHealth
+                        
+                        if (currentHealth <= 0 and previousHealth > 0) or (not char.Parent and previousHealth < 75) then
+                            if not processedVictims[pName] then
+                                
+                                processedVictims[pName] = true
+                                task.delay(3, function() processedVictims[pName] = nil end)
+                                
+                                local distance = (myRoot.Position - root.Position).Magnitude
+                                if distance <= 28 then
+                                    local current = getgenv().KillCount
+                                    task.wait(0.05) 
+                                    if getgenv().KillCount == current then
+                                        updateKillUI(getgenv().KillCount + 1)
+                                    end
+                                end
+                            end
+                        end
+                    end
                 end
             end
-        end)
-    end)
-end
-
-for _, player in ipairs(Players:GetPlayers()) do
-    monitorEnemyDefeats(player)
-end
-Players.PlayerAdded:Connect(monitorEnemyDefeats)
+        end
+    end
+end)
 
 local scriptsTab = window:CreateTab({ Name = "Scripts", Icon = 0 })
 
@@ -1111,7 +1193,7 @@ scriptsTab:CreateButton({ Name = "Shiftlock", Callback = function()
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-Shiftlock-No-Disappear-after-die-23318"))() 
 end })
 
-scriptsTab:CreateButton({ Name = "Fly 1", Callback = function() 
+scriptsTab:CreateButton({ Name = "Fly", Callback = function() 
     loadstring(game:HttpGet("https://pastefy.app/9bilwWLP/raw"))() 
 end })
 
@@ -1119,7 +1201,7 @@ scriptsTab:CreateButton({ Name = "Fly 2", Callback = function()
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-script-v3-16742"))() 
 end })
 
-scriptsTab:CreateButton({ Name = "Telekinesis Fling 1", Callback = function() 
+scriptsTab:CreateButton({ Name = "Telekinesis Fling", Callback = function() 
     loadstring(game:HttpGet("https://pastebin.com/raw/biR1ZZA9"))()
 end })
 
@@ -1135,7 +1217,7 @@ scriptsTab:CreateButton({ Name = "Telekinesis 4", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty1.lua"))() 
 end })
 
-scriptsTab:CreateButton({ Name = "Netless 1", Callback = function() 
+scriptsTab:CreateButton({ Name = "Netless", Callback = function() 
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Anti-hat-fall-82624"))() 
 end })
 
@@ -1145,6 +1227,10 @@ end })
 
 scriptsTab:CreateButton({ Name = "Verity V1", Callback = function() 
     loadstring(game:HttpGet("https://pastebin.com/raw/pQjRMdiG"))() 
+end })
+
+scriptsTab:CreateButton({ Name = "Verity V2", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/rizz65667-svg/Ver/refs/heads/main/Verity_FIXED.TxT"))()
 end })
 
 scriptsTab:CreateButton({ Name = "Welding Abuse", Callback = function() 
