@@ -26,14 +26,13 @@ homeTab:CreateButton({ Name = "Remote Spy", Callback = function()
     loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua"))() 
 end })
 
-
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 
 local LocalPlayer = Players.LocalPlayer
 
-getgenv().EspEnabled = true
+-- ESP starts OFF
+getgenv().EspEnabled = false
 getgenv().EspColor = Color3.fromRGB(96, 205, 255)
 getgenv().ESPData = getgenv().ESPData or {}
 
@@ -264,7 +263,7 @@ local function createESP(player, character)
     boxStroke.Color = getgenv().EspColor
     boxStroke.Parent = box
 
-    -- Tracer
+    -- Tracer container
     local tracer = Instance.new("Frame")
     tracer.Name = player.Name .. "_ESPTracer"
     tracer.BackgroundTransparency = 1
@@ -275,20 +274,24 @@ local function createESP(player, character)
 
     data.Tracer = tracer
 
+    -- Shadow FIRST so it stays behind the colored line
+    local tracerShadow = Instance.new("Frame")
+    tracerShadow.Name = "Shadow"
+    tracerShadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    tracerShadow.BackgroundTransparency = 0.65
+    tracerShadow.BorderSizePixel = 0
+    tracerShadow.AnchorPoint = Vector2.new(0.5, 0.5)
+    tracerShadow.ZIndex = 1
+    tracerShadow.Parent = tracer
+
+    -- Colored tracer SECOND so it stays bright
     local tracerLine = Instance.new("Frame")
     tracerLine.Name = "Line"
     tracerLine.BackgroundColor3 = getgenv().EspColor
     tracerLine.BorderSizePixel = 0
     tracerLine.AnchorPoint = Vector2.new(0.5, 0.5)
+    tracerLine.ZIndex = 2
     tracerLine.Parent = tracer
-
-    local tracerShadow = Instance.new("Frame")
-    tracerShadow.Name = "Shadow"
-    tracerShadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    tracerShadow.BackgroundTransparency = 0.4
-    tracerShadow.BorderSizePixel = 0
-    tracerShadow.AnchorPoint = Vector2.new(0.5, 0.5)
-    tracerShadow.Parent = tracer
 
     data.RenderConnection = RunService.RenderStepped:Connect(function()
         if not getgenv().EspEnabled then
@@ -363,7 +366,7 @@ local function createESP(player, character)
         boxStroke.Color = color
         tracerLine.BackgroundColor3 = color
 
-        -- Get the complete avatar bounds.
+        -- Get complete avatar bounds.
         local boundingCFrame, boundingSize =
             character:GetBoundingBox()
 
@@ -384,7 +387,7 @@ local function createESP(player, character)
             return
         end
 
-        -- Calculate top/bottom from the entire avatar.
+        -- Calculate top/bottom from entire avatar.
         local topWorld =
             boundsCenter +
             Vector3.new(0, boundingSize.Y / 2, 0)
@@ -426,7 +429,7 @@ local function createESP(player, character)
             box.Visible = true
         end
 
-        -- Tracer endpoint.
+        -- Tracer endpoint
         local feetScreen, feetVisible =
             camera:WorldToViewportPoint(bottomWorld)
 
@@ -464,16 +467,18 @@ local function createESP(player, character)
         local centerY =
             (startY + endY) / 2
 
+        -- Bright colored line
         tracerLine.Size =
-            UDim2.fromOffset(lineLength, 1.5)
+            UDim2.fromOffset(lineLength, 2)
 
         tracerLine.Position =
             UDim2.fromOffset(centerX, centerY)
 
         tracerLine.Rotation = angle
 
+        -- Subtle shadow/outline
         tracerShadow.Size =
-            UDim2.fromOffset(lineLength, 3)
+            UDim2.fromOffset(lineLength, 4)
 
         tracerShadow.Position =
             UDim2.fromOffset(centerX, centerY)
@@ -562,6 +567,7 @@ local function setupPlayer(player)
     end
 end
 
+-- Enable ESP manually
 getgenv().EnableESP = function()
     getgenv().EspEnabled = true
 
@@ -572,6 +578,7 @@ getgenv().EnableESP = function()
     end
 end
 
+-- Disable ESP manually
 getgenv().DisableESP = function()
     getgenv().EspEnabled = false
 
@@ -580,6 +587,7 @@ getgenv().DisableESP = function()
     end
 end
 
+-- Refresh ESP
 getgenv().RefreshESP = function()
     if not getgenv().EspEnabled then
         return
@@ -619,36 +627,32 @@ LocalPlayer.CharacterAdded:Connect(function()
     end
 end)
 
-for _, player in ipairs(Players:GetPlayers()) do
-    if player ~= LocalPlayer then
-        setupPlayer(player)
-    end
-end
+-- IMPORTANT:
+-- Do NOT enable ESP here.
+-- It starts OFF until EnableESP() is called.
+
 
 local espToggle = homeTab:CreateToggle({
     name = "Player ESP",
     flag = "PlayerESP",
     value = false,
-
     callback = function(value)
         if value then
-            if getgenv().EnableESP then
-                getgenv().EnableESP()
-            end
+            getgenv().EnableESP()
         else
-            if getgenv().DisableESP then
-                getgenv().DisableESP()
-            end
+            getgenv().DisableESP()
         end
     end,
 })
 
-
 homeTab:CreateColorPicker({
     name = "Highlight Color",
-    color = Color3.fromRGB(96, 205, 255),
-    callback = function(color, alpha) getgenv().EspColor = color end,
+    color = getgenv().EspColor,
+    callback = function(color, alpha)
+        getgenv().EspColor = color
+    end,
 })
+
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
