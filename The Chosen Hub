@@ -1142,6 +1142,11 @@ task.spawn(function()
     end
 end)
 
+homeTab:CreateText({
+    name = "Assists",
+    text = "If You Damaged One Person And The Other Killed Them, You Get A Kill.",
+})
+
 local scriptsTab = window:CreateTab({ Name = "Scripts", Icon = 0 })
 
 scriptsTab:CreateSection({ Name = "Universal" })
@@ -1584,6 +1589,10 @@ end })
 
 gamesTab:CreateButton({ Name = "Your Murder Mystery Hub", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Your-Murder-Mystery-Hub/refs/heads/main/README.md"))()
+end })
+
+gamesTab:CreateButton({ Name = "Your Funky Friday Hub", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Your-Funky-Friday-Script/refs/heads/main/README.md"))()
 end })
 
 window:Toast({ title = "Loaded", icon = 125823673784681 })
