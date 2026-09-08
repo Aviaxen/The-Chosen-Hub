@@ -1006,10 +1006,10 @@ noclipToggle:Set(false)
 
 local flySpeedSlider = homeTab:CreateSlider({
     name = "Flight Speed",
-    Info = "Adjust your flight movement speed",
     Range = {0, 250}, 
     Increment = 1,
     CurrentValue = 50, 
+    Suffix = " studs",
     Flag = "FlySpeedSlider",
     Callback = function(value)
         getgenv().FlySpeed = value
@@ -1021,13 +1021,24 @@ homeTab:CreateSlider({
     Range = { 20, 250 }, 
     Increment = 1, 
     CurrentValue = 16, 
-    Suffix = " studs", 
+    Suffix = "studs", 
     Callback = function(Value) 
         local player = game:GetService("Players").LocalPlayer 
         if player and player.Character and player.Character:FindFirstChildOfClass("Humanoid") then 
             player.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = Value 
         end 
     end 
+})
+
+homeTab:CreateSlider({
+    name = "Field of view",
+    range = { 70, 120 },
+    Increment = 1,
+    CurrentValue = 70,
+    suffix = "°",
+    callback = function(value)
+        workspace.CurrentCamera.FieldOfView = value
+    end,
 })
 
 homeTab:CreateSection({ Name = "Stats" })
