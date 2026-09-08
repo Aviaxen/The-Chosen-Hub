@@ -1595,4 +1595,8 @@ gamesTab:CreateButton({ Name = "Your Funky Friday Hub", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Your-Funky-Friday-Script/refs/heads/main/README.md"))()
 end })
 
+gamesTab:CreateButton({ Name = "Your Doors Hub", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Your-Doors-Hub/refs/heads/main/README.md"))()
+end })
+
 window:Toast({ title = "Loaded", icon = 125823673784681 })
