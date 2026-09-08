@@ -1154,7 +1154,7 @@ scriptsTab:CreateButton({ Name = "Nameless Admin", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/Source.lua"))()
 end })
 
-scriptsTab:CreateButton({ Name = "Dex", Callback = function() 
+scriptsTab:CreateButton({ Name = "Dex Explorer", Callback = function() 
     loadstring(game:HttpGet("https://github.com/AZYsGithub/DexPlusPlus/releases/latest/download/out.lua"))()
 end })
 
