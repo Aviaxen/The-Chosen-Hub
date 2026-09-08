@@ -353,8 +353,7 @@ local function createESP(player, character)
         highlight.FillColor = color
         boxStroke.Color = color
         tracerLine.BackgroundColor3 = color
-
-        -- Get complete avatar bounds.
+        
         local boundingCFrame, boundingSize =
             character:GetBoundingBox()
 
