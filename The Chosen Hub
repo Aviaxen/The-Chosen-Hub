@@ -117,7 +117,6 @@ local function cleanupPlayer(player)
     getgenv().ESPData[player] = nil
 end
 
--- Finds usable parts even on custom/non-standard avatars.
 local function getAvatarParts(character)
     if not character then
         return nil, nil
@@ -128,8 +127,7 @@ local function getAvatarParts(character)
         or character.PrimaryPart
 
     local head = character:FindFirstChild("Head")
-
-    -- Custom rigs may not have HumanoidRootPart.
+    
     if not root or not root:IsA("BasePart") then
         root = nil
 
@@ -140,8 +138,7 @@ local function getAvatarParts(character)
             end
         end
     end
-
-    -- If there is no Head, use the root/body part.
+    
     if not head or not head:IsA("BasePart") then
         head = root
     end
@@ -635,7 +632,6 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 getgenv().ChamsEnabled = false
-getgenv().ChamsColor = Color3.fromRGB(96, 205, 255)
 
 local ChamsTargets = {}
 local ChamsConnections = {}
@@ -682,7 +678,7 @@ local function applyChams(player, character)
 
     local highlight = Instance.new("Highlight")
     highlight.Name = "SoloChamsHighlight"
-    highlight.FillColor = getgenv().ChamsColor
+    highlight.FillColor = getgenv().EspColor or Color3.fromRGB(96, 205, 255) -- Uses picker color, falls back to blue
     highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
     highlight.FillTransparency = 0.5
     highlight.OutlineTransparency = 0
@@ -789,7 +785,7 @@ task.spawn(function()
                     local highlight = item.Data.Highlight
 
                     if highlight and highlight:IsDescendantOf(game) then
-                        highlight.FillColor = getgenv().ChamsColor
+                        highlight.FillColor = getgenv().EspColor or Color3.fromRGB(96, 205, 255)
 
                         highlight.Enabled =
                             index <= 28
@@ -1033,6 +1029,8 @@ homeTab:CreateSlider({
         end 
     end 
 })
+
+homeTab:CreateSection({ Name = "Stats" })
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
