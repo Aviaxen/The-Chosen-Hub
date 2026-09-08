@@ -4,6 +4,7 @@ local window = Rayfield:CreateWindow({
     name = "The Chosen Hub",
     subtitle = "By Inky",
     sidebarLayout = true,
+    theme = "default",
 })
 
 local homeTab = window:CreateTab({ Name = "Home", Icon = 0 })
@@ -1584,3 +1585,5 @@ end })
 gamesTab:CreateButton({ Name = "Your Murder Mystery Hub", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Your-Murder-Mystery-Hub/refs/heads/main/README.md"))()
 end })
+
+window:Toast({ title = "Loaded", icon = 125823673784681 })
