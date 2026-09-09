@@ -1603,4 +1603,23 @@ gamesTab:CreateButton({ Name = "Your Keyboard Escape Hub", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Your-Keyboard-Escape-Hub/refs/heads/main/README.md"))()
 end })
 
+local CreTab = window:CreateTab({ Name = "Credits", Icon = 0 })
+
+CreTab:CreateSection({ Name = "Credits" })
+
+CreTab:CreateText({
+    name = "Credits",
+    text = "Credits To Every Script Owner, Only At Mzscripts.com and Scriptblox.com",
+})
+
+CreTab:CreateText({
+    name = "User Profiles",
+    text = "Mzscripts [.gamerbear9] • Scriptblox [Inky10]",
+})
+
+CreTab:CreateText({
+    name = "Message",
+    text = "If Any Scripts Are Patched, Comment On My Posts. Always Will Be Keyless :)",
+})
+
 window:Toast({ title = "Loaded", icon = 125823673784681 })
