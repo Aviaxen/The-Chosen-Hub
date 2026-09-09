@@ -1576,7 +1576,7 @@ local gamesTab = window:CreateTab({ Name = "Games", icon = 0 })
 gamesTab:CreateSection({ name = "Scripts", icon = 93364949241311 })
 
 gamesTab:CreateButton({ Name = "Your Natural Disaster Hub", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Inkyxen/Nds-Hub/refs/heads/main/Your%20Natural%20Disaster%20Hub"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Your-Natural-Disaster-Hub/refs/heads/main/README.md"))()
 end })
 
 gamesTab:CreateButton({ Name = "Your 99 Nights Hub", Callback = function() 
@@ -1597,6 +1597,10 @@ end })
 
 gamesTab:CreateButton({ Name = "Your Doors Hub", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Your-Doors-Hub/refs/heads/main/README.md"))()
+end })
+
+gamesTab:CreateButton({ Name = "Your Keyboard Escape Hub", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Your-Keyboard-Escape-Hub/refs/heads/main/README.md"))()
 end })
 
 window:Toast({ title = "Loaded", icon = 125823673784681 })
