@@ -1319,6 +1319,10 @@ scriptsTab:CreateButton({ Name = "Fps Booster", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/ashmehra852-lab/AshishAntiLag.Luaa/refs/heads/main/AshishAntialag.LUA"))() 
 end })
 
+scriptsTab:CreateButton({ Name = "Fps Booster 2", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/JoshzzAlteregooo/FpsBoosterV2/refs/heads/main/FpsBoosterV2/JoshzzPanelBooster"))()
+end })
+
 scriptsTab:CreateButton({ Name = "Brainrot Police", Callback = function() 
     loadstring(game:HttpGet("https://loadstring.net/scripts/brainrotpolice.lua"))()
 end })
