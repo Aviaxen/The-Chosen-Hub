@@ -1607,6 +1607,15 @@ Animationstab:CreateButton({ Name = "Krystal Dance", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Krystal%20Dance"))()
 end })
 
+Animationstab:CreateButton({ Name = "Motorcycle", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Motorcycle"))()
+end })
+
+Animationstab:CreateText({
+    name = "Genesis Hats",
+    text = "Go To Their Discord To Know Which Hat To Use https://discord.gg/8T3ZQFqnQ9",
+})
+
 local gamesTab = window:CreateTab({ Name = "Games", icon = 0 })
 
 gamesTab:CreateSection({ name = "Scripts", icon = 93364949241311 })
