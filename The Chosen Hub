@@ -1571,12 +1571,24 @@ Animationstab:CreateButton({ Name = "Patchma Hub", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty25.lua"))()
 end })
 
-Animationstab:CreateButton({ Name = "Fe Noli Hats", Callback = function() 
+Animationstab:CreateButton({ Name = "Noli", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/qwertys/refs/heads/main/qwerty0.lua"))()
 end })
 
-Animationstab:CreateButton({ Name = "Fe Coolkid Hats", Callback = function() 
+Animationstab:CreateButton({ Name = "Coolkid", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/qwertys/refs/heads/main/qwerty2.lua"))()
+end })
+
+Animationstab:CreateButton({ Name = "Lighting Cannon", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Lightning%20Cannon"))()
+end })
+
+Animationstab:CreateButton({ Name = "Goner", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Goner"))()
+end })
+
+Animationstab:CreateButton({ Name = "Sin Dragon", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Sin%20Dragon"))()
 end })
 
 local gamesTab = window:CreateTab({ Name = "Games", icon = 0 })
@@ -1632,6 +1644,11 @@ CreTab:CreateText({
 CreTab:CreateText({
     name = "Message",
     text = "If Any Scripts Are Patched, Comment On My Posts. Always Will Be Keyless :)",
+})
+
+CreTab:CreateText({
+    name = "Sorry",
+    text = "Wind Ui Script Hub Will Be Discontinued Because It Is Hard Handling 2 Script Hubs at the same time. I Hope You Guys Can Understand.",
 })
 
 window:Toast({ title = "Loaded", icon = 125823673784681 })
