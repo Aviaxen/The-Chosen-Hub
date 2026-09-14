@@ -1611,6 +1611,14 @@ Animationstab:CreateButton({ Name = "Motorcycle", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Motorcycle"))()
 end })
 
+Animationstab:CreateButton({ Name = "Gale Fighter", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Gale%20Fighter"))()
+end })
+
+Animationstab:CreateButton({ Name = "Ban Hammer", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Ban%20Hammer"))()
+end })
+
 Animationstab:CreateText({
     name = "Genesis Hats",
     text = "Go To Their Discord To Know Which Hat To Use https://discord.com/invite/aEZpBEHgMT",
