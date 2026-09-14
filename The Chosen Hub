@@ -1631,6 +1631,18 @@ Animationstab:CreateButton({ Name = "Sniper", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Sniper"))()
 end })
 
+Animationstab:CreateButton({ Name = "Studio Dummy", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Studio%20Dummy"))()
+end })
+
+Animationstab:CreateButton({ Name = "Ak47", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/AK-47"))()
+end })
+
+Animationstab:CreateButton({ Name = "Sadist Genocider", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Sadist%20Genocider"))()
+end })
+
 Animationstab:CreateText({
     name = "Genesis Hats",
     text = "Go To Their Discord To Know Which Hat To Use https://discord.com/invite/aEZpBEHgMT (Only Applies To Genesis Scripts)",
