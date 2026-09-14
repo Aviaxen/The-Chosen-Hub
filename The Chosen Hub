@@ -1619,9 +1619,17 @@ Animationstab:CreateButton({ Name = "Ban Hammer", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Ban%20Hammer"))()
 end })
 
+Animationstab:CreateButton({ Name = "Puppet Master", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Puppet%20Master"))()
+end })
+
+Animationstab:CreateButton({ Name = "Minigun", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Minigun"))()
+end })
+
 Animationstab:CreateText({
     name = "Genesis Hats",
-    text = "Go To Their Discord To Know Which Hat To Use https://discord.com/invite/aEZpBEHgMT",
+    text = "Go To Their Discord To Know Which Hat To Use https://discord.com/invite/aEZpBEHgMT (Only Applies To Genesis Scripts)",
 })
 
 local gamesTab = window:CreateTab({ Name = "Games", icon = 0 })
