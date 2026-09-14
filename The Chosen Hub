@@ -1547,6 +1547,10 @@ Animationstab:CreateButton({ Name = "Shadow The Hedgehog", Callback = function()
     loadstring(game:HttpGet("https://pastefy.app/0QSkiaHL/raw"))()
 end })
 
+Animationstab:CreateButton({ Name = "Gun Script", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/pYMbRb7w"))()
+end })
+
 Animationstab:CreateSection({ Name = "R6" })
 
 Animationstab:CreateButton({ Name = "R6 Animation", Callback = function() 
@@ -1571,6 +1575,10 @@ Animationstab:CreateButton({ Name = "Patchma Hub", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty25.lua"))()
 end })
 
+Animationstab:CreateButton({ Name = "Patchma Hub V61", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Patchma-Hub-v61/refs/heads/main/CreditsToPatchmaHubOwners"))()
+end })
+
 Animationstab:CreateButton({ Name = "Noli", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/qwertys/refs/heads/main/qwerty0.lua"))()
 end })
@@ -1580,15 +1588,23 @@ Animationstab:CreateButton({ Name = "Coolkid", Callback = function()
 end })
 
 Animationstab:CreateButton({ Name = "Lighting Cannon", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Lightning%20Cannon"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Lightning%20Cannon"))()
 end })
 
 Animationstab:CreateButton({ Name = "Goner", Callback = function() 
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Goner"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Goner"))()
 end })
 
 Animationstab:CreateButton({ Name = "Sin Dragon", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Sin%20Dragon"))()
+end })
+
+Animationstab:CreateButton({ Name = "Neptunian", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Neptunian%20V"))()
+end })
+
+Animationstab:CreateButton({ Name = "Krystal Dance", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Krystal%20Dance"))()
 end })
 
 local gamesTab = window:CreateTab({ Name = "Games", icon = 0 })
