@@ -1613,7 +1613,7 @@ end })
 
 Animationstab:CreateText({
     name = "Genesis Hats",
-    text = "Go To Their Discord To Know Which Hat To Use https://discord.gg/8T3ZQFqnQ9",
+    text = "Go To Their Discord To Know Which Hat To Use https://discord.com/invite/aEZpBEHgMT",
 })
 
 local gamesTab = window:CreateTab({ Name = "Games", icon = 0 })
