@@ -1231,6 +1231,10 @@ scriptsTab:CreateButton({ Name = "Telekinesis 4", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty1.lua"))() 
 end })
 
+scriptsTab:CreateButton({ Name = "Telekinesis Gui 5", Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/VVWcfs9t"))()
+end })
+
 scriptsTab:CreateButton({ Name = "Netless", Callback = function() 
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Anti-hat-fall-82624"))() 
 end })
