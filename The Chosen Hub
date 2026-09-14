@@ -1627,6 +1627,10 @@ Animationstab:CreateButton({ Name = "Minigun", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Minigun"))()
 end })
 
+Animationstab:CreateButton({ Name = "Sniper", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Sniper"))()
+end })
+
 Animationstab:CreateText({
     name = "Genesis Hats",
     text = "Go To Their Discord To Know Which Hat To Use https://discord.com/invite/aEZpBEHgMT (Only Applies To Genesis Scripts)",
