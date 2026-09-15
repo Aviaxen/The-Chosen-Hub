@@ -1705,7 +1705,7 @@ CreTab:CreateText({
 
 CreTab:CreateText({
     name = "Sorry",
-    text = "Wind Ui Version Of This Hub Will Be Discontinued Because It Is Hard Handling 2 Script Hubs at the same time. I Hope You Guys Can Understand.",
+    text = "Wind Ui Version Of This Hub Will Be Discontinued Because It Is Hard Handling 2 Versions Of This Script Hub at the same time. I Hope You Guys Can Understand.",
 })
 
 window:Toast({ title = "Loaded", icon = 125823673784681 })
