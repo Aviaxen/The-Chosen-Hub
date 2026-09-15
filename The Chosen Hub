@@ -1479,6 +1479,10 @@ hubsTab:CreateButton({ Name = "Aesthetic Hub", Callback = function()
     loadstring(game:HttpGet("https://gist.githubusercontent.com/Darknife339/b6b0d348c59ac034c8eb7f6210dd4029/raw/9c875ab4f5fdfccc4ef318912d9a02a4f08dd7ef/file.lua"))()
 end })
 
+hubsTab:CreateButton({ Name = "Tiger X Hub", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/balintTheDevX/Tiger-X-V3/main/Tiger%20X%20V3.5%20Fixed"))()
+end })
+
 local trollingTab = window:CreateTab({ Name = "Trolling", Icon = 0 })
 
 trollingTab:CreateSection({ Name = "Trolling" })
