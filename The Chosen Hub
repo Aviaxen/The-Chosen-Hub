@@ -1643,6 +1643,14 @@ Animationstab:CreateButton({ Name = "Sadist Genocider", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Sadist%20Genocider"))()
 end })
 
+Animationstab:CreateButton({ Name = "DearSister", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Dearsister"))()
+end })
+
+Animationstab:CreateButton({ Name = "Good Cop Bad Cop", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Good%20Cop%20Bad%20Cop"))()
+end })
+
 Animationstab:CreateText({
     name = "Genesis Hats",
     text = "Go To Their Discord To Know Which Hat To Use https://discord.com/invite/aEZpBEHgMT (Only Applies To Genesis Scripts)",
