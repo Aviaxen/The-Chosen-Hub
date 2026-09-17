@@ -1668,6 +1668,11 @@ Animationstab:CreateText({
     text = "Go To Their Discord To Know Which Hat To Use https://discord.com/invite/aEZpBEHgMT (Only Applies To Genesis Scripts)",
 })
 
+Animationstab:CreateText({
+    name = "24 Hours Discord",
+    text = "Go To Their Discord To Know Which Hat To Use https://discord.gg/bjTxKxjJVc (Only Applies To 24 Hour Fe Scripts)",
+})
+
 local gamesTab = window:CreateTab({ Name = "Games", icon = 0 })
 
 gamesTab:CreateSection({ name = "Scripts", icon = 93364949241311 })
