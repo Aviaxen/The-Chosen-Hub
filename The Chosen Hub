@@ -1655,6 +1655,10 @@ Animationstab:CreateButton({ Name = "Good Cop Bad Cop", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/refs/heads/main/Loadstrings/Good%20Cop%20Bad%20Cop"))()
 end })
 
+Animationstab:CreateButton({ Name = "Hacklord", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Aviaxen/Hacklord-Script-24-hours-fe-/refs/heads/main/README.md"))()
+end })
+
 Animationstab:CreateText({
     name = "Genesis Hats",
     text = "Go To Their Discord To Know Which Hat To Use https://discord.com/invite/aEZpBEHgMT (Only Applies To Genesis Scripts)",
@@ -1718,6 +1722,11 @@ CreTab:CreateText({
 CreTab:CreateText({
     name = "Sorry",
     text = "Wind Ui Version Of This Hub Will Be Discontinued Because It Is Hard Handling 2 Versions Of This Script Hub at the same time. I Hope You Guys Can Understand.",
+})
+
+CreTab:CreateText({ 
+    name = "▪ Changelogs ▪", 
+    text = "∘ Added Hacklord" 
 })
 
 window:Toast({ title = "Loaded", icon = 125823673784681 })
