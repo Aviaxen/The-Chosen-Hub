@@ -1387,6 +1387,14 @@ scriptsTab:CreateButton({ Name = "Coolkid Gui V3", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/MiRw3b/c00lgui-v3rx/main/c00lguiv3rx.lua"))() 
 end })
 
+scriptsTab:CreateButton({ Name = "Coolkid Gui V4", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Natural-Disaster-Survival-c00lkidds-op-trolling-gui-of-nds-30335"))()
+end })
+
+scriptsTab:CreateButton({ Name = "G00by665len Gui", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-g00by665len-gui-f3x-New-update-228268"))()
+end })
+
 scriptsTab:CreateButton({ Name = "Coolkid Executor", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/GOJO07775/C00lkiddK1ng-GUI/bb47ccdd3540216eae52b96569bf17671f0ea41d/C00lkiddK1ng%20GUI", true))()
 end })
