@@ -27,6 +27,21 @@ homeTab:CreateButton({ Name = "Remote Spy", Callback = function()
     loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/SimpleSpy.lua"))() 
 end })
 
+homeTab:CreateButton({
+    Name = "Copy Discord Link",
+    Callback = function()
+        setclipboard("https://discord.gg/wf7Ex6Kzf3")
+        
+        window:Toast({
+            Title = "Link Copied!",
+            Content = "Discord invite copied to clipboard. Go paste it in your browser!",
+            Icon = 125823673784681, 
+            Duration = 5
+        })
+    end,
+})
+
+
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 
