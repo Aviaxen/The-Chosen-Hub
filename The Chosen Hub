@@ -1578,6 +1578,10 @@ Animationstab:CreateButton({ Name = "Gun Script", Callback = function()
     loadstring(game:HttpGet("https://pastebin.com/raw/pYMbRb7w"))()
 end })
 
+Animationstab:CreateButton({ Name = "R15 Sonic Exe", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-R15-Sonic-exe-63788"))()
+end })
+
 Animationstab:CreateSection({ Name = "R6" })
 
 Animationstab:CreateButton({ Name = "R6 Animation", Callback = function() 
@@ -1588,7 +1592,7 @@ Animationstab:CreateButton({ Name = "Slasher Anim", Callback = function()
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-Slasher-Delta-R6-201469"))()
 end })
 
-Animationstab:CreateButton({ Name = "Sonic Exe", Callback = function() 
+Animationstab:CreateButton({ Name = "R6 Sonic Exe", Callback = function() 
     loadstring(game:HttpGet("https://pastebin.com/raw/chqPBh9F"))()
 end })
 
@@ -1766,7 +1770,7 @@ CreTab:CreateText({
 
 CreTab:CreateText({ 
     name = "▪ Changelogs ▪", 
-    text = "∘ Added Star Glitcher V1" 
+    text = "∘ Added Fe R15 Sonic Exe" 
 })
 
 window:Toast({ title = "Loaded", icon = 125823673784681 })
