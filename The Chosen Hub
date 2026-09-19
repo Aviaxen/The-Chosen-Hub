@@ -1690,6 +1690,10 @@ Animationstab:CreateButton({ Name = "Dual Solaris V2", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/BloxinStud10/24-Hours/refs/heads/main/Obfuscations/DualSolarisV2.luau"))()
 end })
 
+Animationstab:CreateButton({ Name = "Star Glitcher V1", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/BloxinStud10/24-Hours/refs/heads/main/Obfuscations/StarGlitcherV1.luau"))()
+end })
+
 Animationstab:CreateText({
     name = "Genesis Hats",
     text = "Go To Their Discord To Know Which Hat To Use https://discord.com/invite/aEZpBEHgMT (Only Applies To Genesis Scripts)",
@@ -1762,7 +1766,7 @@ CreTab:CreateText({
 
 CreTab:CreateText({ 
     name = "▪ Changelogs ▪", 
-    text = "∘ Added Dual Solaris V2" 
+    text = "∘ Added Star Glitcher V1" 
 })
 
 window:Toast({ title = "Loaded", icon = 125823673784681 })
