@@ -1751,7 +1751,7 @@ CreTab:CreateText({
 
 CreTab:CreateText({
     name = "User Profiles",
-    text = "Mzscripts [.gamerbear9] • Scriptblox [Inky10]",
+    text = "Mzscripts [.gamerbear9] • Scriptblox [NullPointer]",
 })
 
 CreTab:CreateText({
