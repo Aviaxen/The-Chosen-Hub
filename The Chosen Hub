@@ -1461,6 +1461,10 @@ requireTab:CreateButton({ Name = "Polaria", Callback = function()
     setclipboard('require(120447114144535):Pload("your name")') 
 end })
 
+requireTab:CreateButton({ Name = "Tubers93 Gui", Callback = function() 
+    setclipboard('require(0x562685ffbc7b).V1("username")') 
+end })
+
 requireTab:CreateButton({ Name = "Roaring Knight", Callback = function() 
     setclipboard('require(71205239813237).Load("user")') 
 end })
