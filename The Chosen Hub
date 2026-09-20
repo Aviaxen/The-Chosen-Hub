@@ -1504,6 +1504,106 @@ requireTab:CreateButton({ Name = "Sea Monkey", Callback = function()
     setclipboard('require(94673163261524)("user")') 
 end })
 
+requireTab:CreateButton({ Name = "Prototype", Callback = function() 
+    setclipboard('require(73755486018996).MorphMonster("name", "Prototype")') 
+end })
+
+requireTab:CreateButton({ Name = "Catnap", Callback = function() 
+    setclipboard('require(92610899059557).MorphMonster("name", "catnap" )') 
+end })
+
+requireTab:CreateButton({ Name = "Huggy Wuggy", Callback = function() 
+    setclipboard('require(138108464845575).MorphMonster("robloxnamehere", "huggy wuggy" )') 
+end })
+
+requireTab:CreateButton({ Name = "Spider Queen", Callback = function() 
+    setclipboard('require(81801397159119).MorphMonster("Username", "spider queen")') 
+end })
+
+requireTab:CreateButton({ Name = "Epstein.exe", Callback = function() 
+    setclipboard('require(134034440311399):load("Username")') 
+end })
+
+requireTab:CreateButton({ Name = "Country Road Creature", Callback = function() 
+    setclipboard('require(75834950186546).MorphMonster("Username", "country road creature")') 
+end })
+
+requireTab:CreateButton({ Name = "Dark Siren Head", Callback = function() 
+    setclipboard('require(75834950186546).MorphMonster("Username", "dark siren head")') 
+end })
+
+requireTab:CreateButton({ Name = "Small Shin", Callback = function() 
+    setclipboard('require(77055143496081).MorphMonster("User","small shin")') 
+end })
+
+requireTab:CreateButton({ Name = "American Demo", Callback = function() 
+    setclipboard('require(111697793579923).americandemo("user")') 
+end })
+
+requireTab:CreateButton({ Name = "Pumpkin Rabbit", Callback = function() 
+    setclipboard('require(87513953915554).MorphMonster("yourrobloxnamehere", "pumpkinrabbit")') 
+end })
+
+requireTab:CreateButton({ Name = "Sonic Eyx", Callback = function() 
+    setclipboard('require(77055143496081).MorphMonster("yourname", "sonic.eyx")') 
+end })
+
+requireTab:CreateButton({ Name = "Death Angel", Callback = function() 
+    setclipboard('require(88521859208314).MorphMonster("question0mark_man", "death angel")') 
+end })
+
+requireTab:CreateButton({ Name = "Demogorgon", Callback = function() 
+    setclipboard('require(90079465185110).load("question0mark_man")') 
+end })
+
+requireTab:CreateButton({ Name = "Blue Dud Forsaken", Callback = function() 
+    setclipboard('require(74432860446268).bluudude("question0mark_man")') 
+end })
+
+requireTab:CreateButton({ Name = "VIP Jason", Callback = function() 
+    setclipboard('require(93565035610376).jason("yourname")') 
+end })
+
+requireTab:CreateButton({ Name = "Sukuna", Callback = function() 
+    setclipboard('require(89529616632600)("question0mark_man", "Sukuna")') 
+end })
+
+requireTab:CreateButton({ Name = "Red Imposter", Callback = function() 
+    setclipboard('require(92083319536644).MorphMonster("your username here", "red")') 
+end })
+
+requireTab:CreateButton({ Name = "Long Boy Bonsai", Callback = function() 
+    setclipboard('require(92273074640861).morph("YourNameHere")') 
+end })
+
+requireTab:CreateButton({ Name = "Fred Bear", Callback = function() 
+    setclipboard('require(77592635370325).fredballs("YourNameHere")') 
+end })
+
+requireTab:CreateButton({ Name = "Cartoon Mouse", Callback = function() 
+    setclipboard('require(75834950186545+1).MorphMonster("YourNameHere","cartoon mouse")') 
+end })
+
+requireTab:CreateButton({ Name = "Flowers", Callback = function() 
+    setclipboard('require(100964016832477).load("YourNameHere")') 
+end })
+
+requireTab:CreateButton({ Name = "Doey", Callback = function() 
+    setclipboard('require(128923392499915).MorphMonster("YourNameHere", "D")') 
+end })
+
+requireTab:CreateButton({ Name = "King Shark", Callback = function() 
+    setclipboard('require(81885009203008):Init("YourNameHere")') 
+end })
+
+requireTab:CreateButton({ Name = "Granny", Callback = function() 
+    setclipboard('require(107774008948464)("YourNameHere")') 
+end })
+
+requireTab:CreateButton({ Name = "The Doctor", Callback = function() 
+    setclipboard('require(95059681285913).morph("YourNameHere")') 
+end })
+
 local hubsTab = window:CreateTab({ Name = "Hubs", Icon = 0 })
 
 hubsTab:CreateSection({ Name = "Universal" })
