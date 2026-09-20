@@ -1,4 +1,4 @@
-local Rayfield = loadstring(game:HttpGet("https://sirius.menu/gen2"))()
+7local Rayfield = loadstring(game:HttpGet("https://sirius.menu/gen2"))()
 
 local window = Rayfield:CreateWindow({
     name = "The Chosen Hub",
@@ -1571,10 +1571,6 @@ end })
 
 requireTab:CreateButton({ Name = "Sukuna", Callback = function() 
     setclipboard('require(89529616632600)("question0mark_man", "Sukuna")') 
-end })
-
-requireTab:CreateButton({ Name = "Red Imposter", Callback = function() 
-    setclipboard('require(92083319536644).MorphMonster("your username here", "red")') 
 end })
 
 requireTab:CreateButton({ Name = "Long Boy Bonsai", Callback = function() 
