@@ -1448,6 +1448,11 @@ requireTab:CreateText({
     text = "» If a Require Script is broken or patched...\n» Comment on my posts or report it in the Discord!",
 })
 
+requireTab:CreateText({
+    name = "ℹ️ How to Use This Tab",
+    text = "These are Server-Side scripts! Clicking a button copies the code to your clipboard so you can paste it into your Server-Side/Backdoor executor or Command Bar."
+})
+
 requireTab:CreateButton({ Name = "Happy Hub", Callback = function() 
     setclipboard('require(104239303577263):Hload("Your-username")') 
 end })
@@ -1602,6 +1607,30 @@ end })
 
 requireTab:CreateButton({ Name = "The Doctor", Callback = function() 
     setclipboard('require(95059681285913).morph("YourNameHere")') 
+end })
+
+requireTab:CreateButton({ Name = "Headcrab", Callback = function() 
+    setclipboard('require(89235764665856).MorphMonster("YourNameHere","headcrab zombie")') 
+end })
+
+requireTab:CreateButton({ Name = "Slower", Callback = function() 
+    setclipboard('require(89235764665856).MorphMonster("YourNameHere","slower")') 
+end })
+
+requireTab:CreateButton({ Name = "Street Horse", Callback = function() 
+    setclipboard('require(89235764665856).MorphMonster("YourNameHere","street horse")') 
+end })
+
+requireTab:CreateButton({ Name = "Prototype", Callback = function() 
+    setclipboard('require(89235764665856).MorphMonster("YourNameHere","Prototype")') 
+end })
+
+requireTab:CreateButton({ Name = "Laalaa", Callback = function() 
+    setclipboard('require(134070347294286)("YourNameHere","laalaa")') 
+end })
+
+requireTab:CreateButton({ Name = "Tinky Tank", Callback = function() 
+    setclipboard('require(99929048999738).MorphMonster("YourNameHere","tinkytank")') 
 end })
 
 local hubsTab = window:CreateTab({ Name = "Hubs", Icon = 0 })
