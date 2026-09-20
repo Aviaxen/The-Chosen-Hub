@@ -1158,8 +1158,8 @@ task.spawn(function()
 end)
 
 homeTab:CreateText({
-    name = "Assists",
-    text = "If You Damaged One Person And The Other Killed Them, You Get A Kill.",
+    name = "⚔️ Assist System",
+    text = "If you damage an enemy and a teammate finishes them off, you will still be awarded a kill credit!"
 })
 
 local scriptsTab = window:CreateTab({ Name = "Scripts", Icon = 0 })
@@ -1432,6 +1432,76 @@ end })
 
 scriptsTab:CreateButton({ Name = "Server Finder", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/MaxproGlitcher/Server_Finder_Deluxe_Back_Up/refs/heads/main/.luau"))()
+end })
+
+local requireTab = window:CreateTab({ Name = "Require Scripts", Icon = 0 })
+
+requireTab:CreateSection({ Name = "Scripts" })
+
+requireTab:CreateText({
+    name = "⚠️ Read This First",
+    text = "This copies the require script to your clipboard—it does not execute it automatically!\n\nNote: Some scripts may not function on mobile devices."
+})
+
+requireTab:CreateText({
+    name = "⚙️ [ NOTICE ] ⚙️",
+    text = "» If a Require Script is broken or patched...\n» Comment on my posts or report it in the Discord!",
+})
+
+requireTab:CreateButton({ Name = "Happy Hub", Callback = function() 
+    setclipboard('require(104239303577263):Hload("Your-username")') 
+end })
+
+requireTab:CreateButton({ Name = "Polaria", Callback = function() 
+    setclipboard('require(120447114144535):Pload("your name")') 
+end })
+
+requireTab:CreateButton({ Name = "Roaring Knight", Callback = function() 
+    setclipboard('require(71205239813237).Load("user")') 
+end })
+
+requireTab:CreateButton({ Name = "Shin Sonic", Callback = function() 
+    setclipboard('require(77055143496081).MorphMonster("username", "shin sonic")') 
+end })
+
+requireTab:CreateButton({ Name = "Organator", Callback = function() 
+    setclipboard('require(119819780800418).MorphMonster("username", "organator")') 
+end })
+
+requireTab:CreateButton({ Name = "Guilt", Callback = function() 
+    setclipboard('require(75834950186546).MorphMonster("username", "guilt")') 
+end })
+
+requireTab:CreateButton({ Name = "Minos Prime", Callback = function() 
+    setclipboard('require(0x3603754d7)("User", "minos2")') 
+end })
+
+requireTab:CreateButton({ Name = "Mimic", Callback = function() 
+    setclipboard('require(77842202241216).load("username")') 
+end })
+
+requireTab:CreateButton({ Name = "Sirenhead", Callback = function() 
+    setclipboard('require(75834950186546).MorphMonster("username", "sirenhead2")') 
+end })
+
+requireTab:CreateButton({ Name = "Bone Rabbit", Callback = function() 
+    setclipboard('require(87513953915554).MorphMonster("user", "bontherabbit")') 
+end })
+
+requireTab:CreateButton({ Name = "Hand", Callback = function() 
+    setclipboard('require(5375399205).Player("your name")') 
+end })
+
+requireTab:CreateButton({ Name = "John Doe", Callback = function() 
+    setclipboard("require(80147538511861).john('yourname')") 
+end })
+
+requireTab:CreateButton({ Name = "Steve", Callback = function() 
+    setclipboard('require(15581949972).mc("yourusername")') 
+end })
+
+requireTab:CreateButton({ Name = "Sea Monkey", Callback = function() 
+    setclipboard('require(94673163261524)("user")') 
 end })
 
 local hubsTab = window:CreateTab({ Name = "Hubs", Icon = 0 })
@@ -1757,8 +1827,8 @@ local CreTab = window:CreateTab({ Name = "Credits", Icon = 0 })
 CreTab:CreateSection({ Name = "Credits" })
 
 CreTab:CreateText({
-    name = "Credits",
-    text = "Credits To Every Script Owner, Only At Mzscripts.com and Scriptblox.com",
+    name = "📜 Credits",
+    text = "Credits to all original script owners.\nFound officially only at Mzscripts.com and Scriptblox.com!"
 })
 
 CreTab:CreateText({
@@ -1767,18 +1837,18 @@ CreTab:CreateText({
 })
 
 CreTab:CreateText({
-    name = "Message",
-    text = "If Any Scripts Are Patched, Comment On My Posts. Always Will Be Keyless :)",
+    name = "💬 Notice",
+    text = "If any scripts are patched, please comment on my posts.\nThis hub will always remain 100% keyless! :)"
 })
 
 CreTab:CreateText({
-    name = "Sorry",
-    text = "Wind Ui Version Of This Hub Will Be Discontinued Because It Is Hard Handling 2 Versions Of This Script Hub at the same time. I Hope You Guys Can Understand.",
+    name = "📢 Announcement",
+    text = "The Wind UI version of this hub is now discontinued.\n\nHandling two versions at the same time has become too difficult. I hope you guys can understand!"
 })
 
 CreTab:CreateText({ 
-    name = "▪ Changelogs ▪", 
-    text = "∘ Added Project L3ck3d Gui And Sheldoni" 
+    name = "Change Logs", 
+    text = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n⚡ MAJOR CHANGES:\n[+] Added a TON of brand new Require Scripts!\n[+] Created a dedicated 'Require Scripts' Tab!\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" 
 })
 
 window:Toast({ title = "Loaded", icon = 125823673784681 })
