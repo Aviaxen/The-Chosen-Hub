@@ -62,7 +62,7 @@ homeTab:CreateButton({
             },
             options = { 
                 { 
-                    text = "Launch Hub", 
+                    text = "Got It!", 
                     style = "primary",
                     callback = function()
                         popup:Close()
@@ -674,6 +674,36 @@ homeTab:CreateColorPicker({
     end,
 })
 
+local fullbright = homeTab:CreateToggle({
+    name = "Fullbright",
+    flag = "Fullbright",
+    value = false,
+    callback = function(value)
+        _G.FullbrightEnabled = value
+        
+        if value then
+            task.spawn(function()
+                local Lighting = game:GetService("Lighting")
+                while _G.FullbrightEnabled do
+                    Lighting.Ambient = Color3.fromRGB(255, 255, 255)
+                    Lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255)
+                    Lighting.Brightness = 2
+                    Lighting.ClockTime = 14
+                    task.wait(0.05) 
+                end
+            end)
+        else
+            local Lighting = game:GetService("Lighting")
+            Lighting.Ambient = Color3.fromRGB(128, 128, 128)
+            Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+            Lighting.Brightness = 1
+            Lighting.ClockTime = 12
+        end
+    end,
+})
+
+fullbright:Set(false)
+
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
@@ -1062,6 +1092,16 @@ local flySpeedSlider = homeTab:CreateSlider({
     end,
 })
 
+_G.TargetWalkSpeed = 16
+
+local player = game:GetService("Players").LocalPlayer
+player.CharacterAdded:Connect(function(character)
+    local humanoid = character:WaitForChild("Humanoid", 5)
+    if humanoid then
+        humanoid.WalkSpeed = _G.TargetWalkSpeed
+    end
+end)
+
 homeTab:CreateSlider({ 
     Name = "Walkspeed", 
     Range = { 20, 250 }, 
@@ -1069,8 +1109,8 @@ homeTab:CreateSlider({
     CurrentValue = 16, 
     Suffix = "studs", 
     Callback = function(Value) 
-        local player = game:GetService("Players").LocalPlayer 
-        if player and player.Character and player.Character:FindFirstChildOfClass("Humanoid") then 
+        _G.TargetWalkSpeed = Value
+        if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then 
             player.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = Value 
         end 
     end 
