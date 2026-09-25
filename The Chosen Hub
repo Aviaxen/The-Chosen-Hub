@@ -41,6 +41,37 @@ homeTab:CreateButton({
     end,
 })
 
+homeTab:CreateButton({ 
+    Name = "Changelogs", 
+    Callback = function() 
+        local popup
+        popup = window:Popup({
+            title = "WHAT'S NEW",
+            subtitle = "Version 1.5 • Feature Drop",
+            dismissable = false, 
+            boxes = {
+                { 
+                    title = "✨ Script Engine v2", 
+                    description = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[+] Added a TON of brand new Scripts!\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", 
+                    icon = 93364949241311 
+                },
+                { 
+                    title = "⚡ Instant Reveals", 
+                    description = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[+] Pages open instantly with zero lag!\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" 
+                },
+            },
+            options = { 
+                { 
+                    text = "Launch Hub", 
+                    style = "primary",
+                    callback = function()
+                        popup:Close()
+                    end
+                } 
+            },
+        })
+    end 
+})
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -2004,6 +2035,16 @@ local CreTab = window:CreateTab({ Name = "Credits", Icon = 0 })
 CreTab:CreateSection({ Name = "Credits" })
 
 CreTab:CreateText({
+    name = "📢 Announcement",
+    text = "The Wind UI version of this hub is now discontinued.\n\nHandling two versions at the same time has become too difficult. I hope you guys can understand!"
+})
+
+CreTab:CreateText({
+    name = "💬 Notice",
+    text = "If any scripts are patched, please comment on my posts.\nThis hub will always remain 100% keyless! :)"
+})
+
+CreTab:CreateText({
     name = "📜 Credits",
     text = "Credits to all original script owners.\nFound officially only at Mzscripts.com and Scriptblox.com!"
 })
@@ -2013,19 +2054,3 @@ CreTab:CreateText({
     text = "Mzscripts [.gamerbear9] • Scriptblox [NullPointer]",
 })
 
-CreTab:CreateText({
-    name = "💬 Notice",
-    text = "If any scripts are patched, please comment on my posts.\nThis hub will always remain 100% keyless! :)"
-})
-
-CreTab:CreateText({
-    name = "📢 Announcement",
-    text = "The Wind UI version of this hub is now discontinued.\n\nHandling two versions at the same time has become too difficult. I hope you guys can understand!"
-})
-
-CreTab:CreateText({ 
-    name = "Change Logs", 
-    text = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n⚡ MAJOR CHANGES:\n[+] Added a TON of brand new Require Scripts!\n[+] Created a dedicated 'Require Scripts' Tab!\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" 
-})
-
-window:Toast({ title = "Loaded", icon = 125823673784681 })
