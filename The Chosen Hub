@@ -51,13 +51,12 @@ homeTab:CreateButton({
             dismissable = false, 
             boxes = {
                 { 
-                    title = "✨ Script Engine v2", 
-                    description = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[+] Added a TON of brand new Scripts!\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", 
-                    icon = 93364949241311 
+                    title = "More Scripts!", 
+                    description = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[+] Added a TON of brand new Scripts!\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
                 },
                 { 
-                    title = "⚡ Instant Reveals", 
-                    description = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[+] Pages open instantly with zero lag!\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" 
+                    title = "More Require Scripts!", 
+                    description = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[+] Added a TON of brand new Require Scripts!\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" 
                 },
             },
             options = { 
@@ -1542,6 +1541,22 @@ end })
 
 requireTab:CreateButton({ Name = "Tubers93 Gui", Callback = function() 
     setclipboard('require(0x562685ffbc7b).V1("username")') 
+end })
+
+requireTab:CreateButton({ Name = "EpicGui V2", Callback = function() 
+    setclipboard('require(109144918642898)("username")') 
+end })
+
+requireTab:CreateButton({ Name = "Blue2Spooky Gui", Callback = function() 
+    setclipboard('require(137870571533698):load("Username")') 
+end })
+
+requireTab:CreateButton({ Name = "RC7", Callback = function()
+    setclipboard('require(12350030542).RC7("name")')
+end })
+
+requireTab:CreateButton({ Name = "HD Admin Ranker", Callback = function()
+    setclipboard('require(7192763922).load("name")')
 end })
 
 requireTab:CreateButton({ Name = "Roaring Knight", Callback = function() 
