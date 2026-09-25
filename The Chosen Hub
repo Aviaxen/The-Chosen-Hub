@@ -1290,7 +1290,7 @@ scriptsTab:CreateButton({ Name = "Pshade (Shaders)", Callback = function()
 end })
 
 scriptsTab:CreateButton({ Name = "Shiftlock", Callback = function() 
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-Shiftlock-No-Disappear-after-die-23318"))() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/INF-HH/-/refs/heads/main/Script"))()
 end })
 
 scriptsTab:CreateButton({ Name = "Fly", Callback = function() 
@@ -1920,6 +1920,10 @@ end })
 
 Animationstab:CreateButton({ Name = "R6 Sonic Exe", Callback = function() 
     loadstring(game:HttpGet("https://pastebin.com/raw/chqPBh9F"))()
+end })
+
+Animationstab:CreateButton({ Name = "Seperahic blade R6", Callback = function() 
+    loadstring(game:HttpGet("https://pastefy.app/59mJGQGe/raw"))()
 end })
 
 Animationstab:CreateSection({ Name = "Hats Or Reanimation" })
