@@ -1115,6 +1115,35 @@ homeTab:CreateSlider({
     end 
 })
 
+local currentJumpPower = 50 
+
+task.spawn(function()
+    while true do
+        local player = game.Players.LocalPlayer
+        if player and player.Character then
+            local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.UseJumpPower = true 
+                if humanoid.JumpPower ~= currentJumpPower then
+                    humanoid.JumpPower = currentJumpPower
+                end
+            end
+        end
+        task.wait(0.1) 
+    end
+end)
+
+homeTab:CreateSlider({
+    name = "Jumppower",
+    range = { 50, 250 }, 
+    increment = 1,
+    value = 50,
+    suffix = "studs",
+    callback = function(value)
+        currentJumpPower = value
+    end,
+})
+
 homeTab:CreateSlider({
     name = "Field of view",
     range = { 70, 120 },
