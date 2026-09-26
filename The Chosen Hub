@@ -1493,6 +1493,10 @@ scriptsTab:CreateButton({ Name = "MikeMercu F3x Gui", Callback = function()
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-MikeMercu-f3x-gui-228774"))()
 end })
 
+scriptsTab:CreateButton({ Name = "Z000rzkidd f3x gui", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-z000rzkidd-F3X-GUI-40-buttons-113528"))()
+end })
+
 scriptsTab:CreateButton({ Name = "Coolkid Gui V1", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/cfsmi2/c00lguiv1/refs/heads/main/Main.lua"))() 
 end })
