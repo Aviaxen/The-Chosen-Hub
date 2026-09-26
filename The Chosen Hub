@@ -46,17 +46,17 @@ homeTab:CreateButton({
     Callback = function() 
         local popup
         popup = window:Popup({
-            title = "WHAT'S NEW",
-            subtitle = "Version 1.5 • Feature Drop",
+            title = "🔥 WHAT'S NEW",
+            subtitle = "Version 1.5 • FEATURE DROP 🚀",
             dismissable = false, 
             boxes = {
                 { 
-                    title = "More Scripts!", 
-                    description = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[+] Added a TON of brand new Scripts!\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                    title = "📜 More Scripts!", 
+                    description = "=======================================\n[+] Added a TON of brand new Scripts! 💎\n======================================="
                 },
                 { 
-                    title = "More Require Scripts!", 
-                    description = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n[+] Added a TON of brand new Require Scripts!\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" 
+                    title = "⚡ More Require Scripts!", 
+                    description = "=======================================\n[+] Added a TON of brand new Require Scripts! 🔓\n=======================================" 
                 },
             },
             options = { 
