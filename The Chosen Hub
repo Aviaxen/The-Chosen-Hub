@@ -1956,6 +1956,10 @@ Animationstab:CreateButton({ Name = "R15 Sonic Exe", Callback = function()
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-R15-Sonic-exe-63788"))()
 end })
 
+Animationstab:CreateButton({ Name = "Homelander R15", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/giobolqv1/homelander-by-GioBolqv1-/refs/heads/main/homelander.lua"))()
+end })
+
 Animationstab:CreateSection({ Name = "R6" })
 
 Animationstab:CreateButton({ Name = "R6 Animation", Callback = function() 
