@@ -2175,6 +2175,16 @@ local RobloxConsole = CreTab:CreateConsole({
     maxLines = 200,
 })
 
+CreTab:CreateInput({
+    name = "Print",
+    numeric = false,
+    placeholder = "Type something here...",
+    callback = function(text)
+        RobloxConsole:Append("[USER] " .. text)
+        print("[USER LOG] " .. text)
+    end,
+})
+
 local processedLogsCount = 0
 
 task.spawn(function()
@@ -2190,12 +2200,14 @@ task.spawn(function()
                     local msg = log.message
                     local msgType = log.messageType
                     
-                    if msgType == Enum.MessageType.MessageOutput then
-                        RobloxConsole:Append("[INFO] " .. msg)
-                    elseif msgType == Enum.MessageType.MessageWarning then
-                        RobloxConsole:Append("[WARN] " .. msg)
-                    elseif msgType == Enum.MessageType.MessageError then
-                        RobloxConsole:Append("[ERROR] " .. msg)
+                    if not string.find(msg, "^%[USER LOG%]") then
+                        if msgType == Enum.MessageType.MessageOutput then
+                            RobloxConsole:Append("[INFO] " .. msg)
+                        elseif msgType == Enum.MessageType.MessageWarning then
+                            RobloxConsole:Append("[WARN] " .. msg)
+                        elseif msgType == Enum.MessageType.MessageError then
+                            RobloxConsole:Append("[ERROR] " .. msg)
+                        end
                     end
                 end
                 processedLogsCount = #logHistory
@@ -2205,4 +2217,160 @@ task.spawn(function()
     end
 end)
 
-print("Rayfield Output Logger Hooked Successfully!")
+print("Works.")
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+local selectedTargetString = "All Players" 
+local flingEnabled = false       
+local antiFlingTargets = {}
+local FlingToggleElement = nil
+
+local PlayerDropdown = CreTab:CreateDropdown({
+    name = "Select Target",
+    options = {"All Players"},
+    currentOption = {"All Players"},
+    multiSelect = false,
+    callback = function(selectedOption)
+        if type(selectedOption) == "table" then
+            selectedTargetString = selectedOption or "All Players"
+        else
+            selectedTargetString = selectedOption or "All Players"
+        end
+        print("Target updated: " .. tostring(selectedTargetString))
+    end,
+})
+
+local function UpdatePlayerDropdown()
+    local playerList = {"All Players"}
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            table.insert(playerList, player.DisplayName .. " (@" .. player.Name .. ")")
+        end
+    end
+    PlayerDropdown:Refresh(playerList)
+end
+
+UpdatePlayerDropdown()
+Players.PlayerAdded:Connect(UpdatePlayerDropdown)
+Players.PlayerRemoving:Connect(function(player)
+    antiFlingTargets[player.UserId] = nil
+    UpdatePlayerDropdown()
+end)
+
+local function GetPlayerFromTargetString(targetStr)
+    if not targetStr or targetStr == "All Players" then return nil end
+    local username = string.match(targetStr, "@([%w_]+)")
+    return username and Players:FindFirstChild(username) or nil
+end
+
+FlingToggleElement = CreTab:CreateToggle({
+    name = "Fling Target",
+    flag = "FlingTargetToggle",
+    value = false,
+    callback = function(value)
+        flingEnabled = value
+        if not flingEnabled then return end
+        
+        local originalCFrame = nil
+        local startingChar = LocalPlayer.Character
+        local startingHRP = startingChar and startingChar:FindFirstChild("HumanoidRootPart")
+        if startingHRP then
+            originalCFrame = startingHRP.CFrame
+        end
+
+        print("Teleport Fling activated!")
+        task.spawn(function()
+            local collisionConnection = nil
+            
+            collisionConnection = RunService.Stepped:Connect(function()
+                local myChar = LocalPlayer.Character
+                local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
+                local myHum = myChar and myChar:FindFirstChildOfClass("Humanoid")
+                
+                if myChar then
+                    for _, part in ipairs(myChar:GetChildren()) do
+                        if part:IsA("BasePart") then 
+                            part.CanCollide = false 
+                        end
+                    end
+                    if myHum then
+                        myHum.PlatformStand = false
+                        myHum.Sit = false
+                    end
+                    if myHRP then
+                        myHRP.Velocity = Vector3.new(0, 0, 0)
+                        myHRP.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                    end
+                end
+            end)
+
+            while flingEnabled do
+                local myChar = LocalPlayer.Character
+                local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
+                
+                if myHRP then
+                    if selectedTargetString == "All Players" or tostring(selectedTargetString):find("All Players") then
+                        for _, p in ipairs(Players:GetPlayers()) do
+                            if p ~= LocalPlayer and flingEnabled and not antiFlingTargets[p.UserId] then
+                                local tHRP = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
+                                local tHum = p.Character and p.Character:FindFirstChildOfClass("Humanoid")
+                                
+                                if tHRP and tHum and tHum.Health > 0 then
+                                    local start = os.clock()
+                                    while os.clock() - start < 1.5 and flingEnabled and tHRP.Parent do
+                                        myHRP.CFrame = tHRP.CFrame * CFrame.new(0, -3.5, 0)
+                                        myHRP.RotVelocity = Vector3.new(0, 150000, 0)
+                                        
+                                        if tHRP.AssemblyLinearVelocity.Magnitude > 120 or tHRP.AssemblyAngularVelocity.Magnitude > 120 then 
+                                            break 
+                                        end
+                                        task.wait(0.02)
+                                    end
+                                end
+                            end
+                        end
+                        flingEnabled = false
+                        FlingToggleElement:Set(false)
+                        break
+                    else
+                        local targetPlayer = GetPlayerFromTargetString(selectedTargetString)
+                        local tHRP = targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+                        local tHum = targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChildOfClass("Humanoid")
+                        
+                        if tHRP and tHum and tHum.Health > 0 then
+                            local start = os.clock()
+                            while os.clock() - start < 2.0 and flingEnabled and tHRP.Parent do
+                                myHRP.CFrame = tHRP.CFrame * CFrame.new(0, -3.5, 0)
+                                myHRP.RotVelocity = Vector3.new(0, 150000, 0)
+                                
+                                if tHRP.AssemblyLinearVelocity.Magnitude > 120 or tHRP.AssemblyAngularVelocity.Magnitude > 120 then 
+                                    break 
+                                end
+                                task.wait(0.02)
+                            end
+                            flingEnabled = false
+                            FlingToggleElement:Set(false)
+                            break
+                        end
+                    end
+                end
+                task.wait(0.01)
+            end
+            
+            if originalCFrame and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                local hrp = LocalPlayer.Character.HumanoidRootPart
+                hrp.CFrame = originalCFrame
+                hrp.RotVelocity = Vector3.new(0, 0, 0)
+                hrp.Velocity = Vector3.new(0, 0, 0)
+                hrp.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                hrp.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+            end
+
+            if collisionConnection then collisionConnection:Disconnect() end
+            print("Teleport Fling stopped cleanly and returned player safely to original spot.")
+        end)
+    end,
+})
