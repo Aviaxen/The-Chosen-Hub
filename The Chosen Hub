@@ -1489,6 +1489,14 @@ scriptsTab:CreateButton({ Name = "Fe Scripts Collection", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/sypcerr/FECollection/refs/heads/main/script.lua",true))()
 end })
 
+scriptsTab:CreateButton({ Name = "Gravel.cc", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/hm5650/HBSS/refs/heads/main/HBSS.lua"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Wallhop", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-Wallhop-Hub-keyless-229748"))()
+end })
+
 scriptsTab:CreateButton({ Name = "MikeMercu F3x Gui", Callback = function() 
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-MikeMercu-f3x-gui-228774"))()
 end })
@@ -1878,6 +1886,10 @@ end })
 
 hubsTab:CreateButton({ Name = "Tiger X Hub", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/balintTheDevX/Tiger-X-V3/main/Tiger%20X%20V3.5%20Fixed"))()
+end })
+
+hubsTab:CreateButton({ Name = "Universal Fe Hub", Callback = function() 
+    loadstring(game:HttpGet"https://you.whimper.xyz/UFE.lua")()
 end })
 
 local trollingTab = window:CreateTab({ Name = "Trolling", Icon = 0 })
