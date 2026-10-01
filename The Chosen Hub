@@ -1497,6 +1497,10 @@ scriptsTab:CreateButton({ Name = "Wallhop", Callback = function()
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-Wallhop-Hub-keyless-229748"))()
 end })
 
+scriptsTab:CreateButton({ Name = "Celestal Visuals", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/marianaxx2c-glitch/ceewww/refs/heads/main/xxx"))()
+end })
+
 scriptsTab:CreateButton({ Name = "MikeMercu F3x Gui", Callback = function() 
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-MikeMercu-f3x-gui-228774"))()
 end })
@@ -2162,3 +2166,43 @@ CreTab:CreateText({
     text = "Mzscripts [.gamerbear9] • Scriptblox [NullPointer]",
 })
 
+local LogService = game:GetService("LogService")
+
+local RobloxConsole = CreTab:CreateConsole({
+    name = "Console",
+    height = 180,
+    follow = true,
+    maxLines = 200,
+})
+
+local processedLogsCount = 0
+
+task.spawn(function()
+    while true do
+        local success, logHistory = pcall(function()
+            return LogService:GetLogHistory()
+        end)
+
+        if success and logHistory then
+            if #logHistory > processedLogsCount then
+                for i = processedLogsCount + 1, #logHistory do
+                    local log = logHistory[i]
+                    local msg = log.message
+                    local msgType = log.messageType
+                    
+                    if msgType == Enum.MessageType.MessageOutput then
+                        RobloxConsole:Append("[INFO] " .. msg)
+                    elseif msgType == Enum.MessageType.MessageWarning then
+                        RobloxConsole:Append("[WARN] " .. msg)
+                    elseif msgType == Enum.MessageType.MessageError then
+                        RobloxConsole:Append("[ERROR] " .. msg)
+                    end
+                end
+                processedLogsCount = #logHistory
+            end
+        end
+        task.wait(0.2) 
+    end
+end)
+
+print("Rayfield Output Logger Hooked Successfully!")
