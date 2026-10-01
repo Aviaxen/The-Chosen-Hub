@@ -1920,6 +1920,385 @@ trollingTab:CreateButton({ Name = "Spy Script", Callback = function()
     loadstring(game:HttpGet("https://gist.githubusercontent.com/DEVADMINENGINE/9bb547b158bc241a29a14bd43139a7aa/raw/7d7aff0bc1ff69be2b7e8bca848dfbb843399c91/dev%2520spyer"))()
 end })
 
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+local selectedTargetString = "All Players"
+local FlingToggleElement = nil
+local flingEnabled = false
+local flingSession = 0
+
+local PlayerDropdown = trollingTab:CreateDropdown({
+    Name = "Select Target",
+    Options = {"All Players"},
+    CurrentOption = {"All Players"},
+    MultipleOptions = false,
+    Callback = function(selectedOption)
+        if type(selectedOption) == "table" then
+            selectedTargetString = selectedOption[1] or "All Players"
+        else
+            selectedTargetString = selectedOption or "All Players"
+        end
+
+        print("Target updated: " .. tostring(selectedTargetString))
+    end,
+})
+
+local function UpdatePlayerDropdown()
+    local playerList = {"All Players"}
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            table.insert(
+                playerList,
+                player.DisplayName .. " (@" .. player.Name .. ")"
+            )
+        end
+    end
+
+    PlayerDropdown:Refresh(playerList)
+end
+
+UpdatePlayerDropdown()
+
+Players.PlayerAdded:Connect(UpdatePlayerDropdown)
+Players.PlayerRemoving:Connect(UpdatePlayerDropdown)
+
+local function GetPlayerFromTargetString(targetStr)
+    if not targetStr or targetStr == "All Players" then
+        return nil
+    end
+
+    local username = string.match(tostring(targetStr), "@([%w_]+)")
+
+    if username then
+        return Players:FindFirstChild(username)
+    end
+
+    return nil
+end
+
+local function StopFling()
+    flingEnabled = false
+    flingSession += 1
+
+    if FlingToggleElement then
+        FlingToggleElement:Set(false)
+    end
+
+    print("Fling disabled.")
+end
+
+LocalPlayer.CharacterAdded:Connect(function()
+    task.wait()
+    StopFling()
+    print("Character respawned - Fling automatically disabled.")
+end)
+
+FlingToggleElement = trollingTab:CreateToggle({
+    Name = "Fling Target",
+    Flag = "FlingTargetToggle",
+    CurrentValue = false,
+    Callback = function(Value)
+        flingEnabled = Value
+
+        if not flingEnabled then
+            flingSession += 1
+            return
+        end
+
+        flingSession += 1
+        local thisSession = flingSession
+
+        local originalCFrame = nil
+        local startingChar = LocalPlayer.Character
+        local startingHRP = startingChar
+            and (
+                startingChar:FindFirstChild("HumanoidRootPart")
+                or startingChar.PrimaryPart
+            )
+
+        if startingHRP then
+            originalCFrame = startingHRP.CFrame
+        end
+
+        print("Teleport Fling activated!")
+
+        task.spawn(function()
+            local collisionConnection = nil
+            local spinAngle = 0
+
+            local fakeSeat = Instance.new("Seat")
+            fakeSeat.Size = Vector3.new(1, 1, 1)
+            fakeSeat.Transparency = 1
+            fakeSeat.CanCollide = false
+            fakeSeat.Anchored = true
+            fakeSeat.Parent = workspace
+
+            collisionConnection = RunService.Stepped:Connect(function()
+                if not flingEnabled or thisSession ~= flingSession then
+                    return
+                end
+
+                local myChar = LocalPlayer.Character
+                local myHRP = myChar
+                    and (
+                        myChar:FindFirstChild("HumanoidRootPart")
+                        or myChar.PrimaryPart
+                    )
+
+                local myHum = myChar
+                    and myChar:FindFirstChildOfClass("Humanoid")
+
+                if myChar then
+                    for _, part in ipairs(myChar:GetChildren()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
+                        end
+                    end
+
+                    if myHum then
+                        myHum.PlatformStand = false
+
+                        if not myHum.Sit then
+                            myHum.Sit = true
+
+                            if fakeSeat.Parent then
+                                fakeSeat:Sit(myHum)
+                            end
+                        end
+                    end
+
+                    if myHRP then
+                        myHRP.Velocity = Vector3.zero
+                        myHRP.AssemblyLinearVelocity = Vector3.zero
+                    end
+                end
+            end)
+
+            while flingEnabled and thisSession == flingSession do
+                local myChar = LocalPlayer.Character
+                local myHRP = myChar
+                    and (
+                        myChar:FindFirstChild("HumanoidRootPart")
+                        or myChar.PrimaryPart
+                    )
+
+                if not myHRP then
+                    break
+                end
+
+                spinAngle = (spinAngle + 120) % 360
+
+                local rotationOffset =
+                    CFrame.Angles(0, math.rad(spinAngle), 0)
+
+                if selectedTargetString == "All Players"
+                    or tostring(selectedTargetString):find("All Players") then
+
+                    for _, player in ipairs(Players:GetPlayers()) do
+                        if player ~= LocalPlayer
+                            and flingEnabled
+                            and thisSession == flingSession then
+
+                            local targetCharacter = player.Character
+
+                            local targetHRP = targetCharacter
+                                and (
+                                    targetCharacter:FindFirstChild("HumanoidRootPart")
+                                    or targetCharacter.PrimaryPart
+                                )
+
+                            local targetHum = targetCharacter
+                                and targetCharacter:FindFirstChildOfClass("Humanoid")
+
+                            if targetHRP and targetHum and targetHum.Health > 0 then
+                                local start = os.clock()
+                                local lastPosition = targetHRP.Position
+
+                                while os.clock() - start < 1.2
+                                    and flingEnabled
+                                    and thisSession == flingSession
+                                    and targetHRP.Parent do
+
+                                    spinAngle = (spinAngle + 120) % 360
+
+                                    rotationOffset =
+                                        CFrame.Angles(
+                                            0,
+                                            math.rad(spinAngle),
+                                            0
+                                        )
+
+                                    local trueVelocity =
+                                        (targetHRP.Position - lastPosition) / 0.02
+
+                                    lastPosition = targetHRP.Position
+
+                                    local trajectoryIntercept =
+                                        trueVelocity * 0.05
+
+                                    local finalCFrame =
+                                        (targetHRP.CFrame + trajectoryIntercept)
+                                        * rotationOffset
+
+                                    if fakeSeat.Parent then
+                                        fakeSeat.CFrame = finalCFrame
+                                    end
+
+                                    if myHRP.Parent then
+                                        myHRP.CFrame = finalCFrame
+                                        myHRP.RotVelocity =
+                                            Vector3.new(0, 200000, 0)
+                                    end
+
+                                    local distance =
+                                        (myHRP.Position - targetHRP.Position).Magnitude
+
+                                    if distance > 25
+                                        or targetHRP.AssemblyLinearVelocity.Magnitude > 250 then
+                                        break
+                                    end
+
+                                    task.wait(0.02)
+                                end
+                            end
+                        end
+                    end
+
+                    if thisSession == flingSession then
+                        StopFling()
+                    end
+
+                    break
+                else
+                    local targetPlayer =
+                        GetPlayerFromTargetString(selectedTargetString)
+
+                    local targetHRP = targetPlayer
+                        and targetPlayer.Character
+                        and (
+                            targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+                            or targetPlayer.Character.PrimaryPart
+                        )
+
+                    local targetHum = targetPlayer
+                        and targetPlayer.Character
+                        and targetPlayer.Character:FindFirstChildOfClass("Humanoid")
+
+                    if targetHRP and targetHum and targetHum.Health > 0 then
+                        local start = os.clock()
+                        local lastPosition = targetHRP.Position
+
+                        while os.clock() - start < 2.0
+                            and flingEnabled
+                            and thisSession == flingSession
+                            and targetHRP.Parent do
+
+                            spinAngle = (spinAngle + 120) % 360
+
+                            rotationOffset =
+                                CFrame.Angles(
+                                    0,
+                                    math.rad(spinAngle),
+                                    0
+                                )
+
+                            local trueVelocity =
+                                (targetHRP.Position - lastPosition) / 0.02
+
+                            lastPosition = targetHRP.Position
+
+                            local trajectoryIntercept =
+                                trueVelocity * 0.05
+
+                            local finalCFrame =
+                                (targetHRP.CFrame + trajectoryIntercept)
+                                * rotationOffset
+
+                            if fakeSeat.Parent then
+                                fakeSeat.CFrame = finalCFrame
+                            end
+
+                            if myHRP.Parent then
+                                myHRP.CFrame = finalCFrame
+                                myHRP.RotVelocity =
+                                    Vector3.new(0, 200000, 0)
+                            end
+
+                            local distance =
+                                (myHRP.Position - targetHRP.Position).Magnitude
+
+                            if distance > 25
+                                or targetHRP.AssemblyLinearVelocity.Magnitude > 250 then
+                                break
+                            end
+
+                            task.wait(0.02)
+                        end
+
+                        if thisSession == flingSession then
+                            StopFling()
+                        end
+
+                        break
+                    end
+                end
+
+                task.wait(0.01)
+            end
+
+            if fakeSeat then
+                fakeSeat:Destroy()
+            end
+
+            if collisionConnection then
+                collisionConnection:Disconnect()
+            end
+
+            task.wait(0.05)
+
+            local myChar = LocalPlayer.Character
+            local myHum = myChar
+                and myChar:FindFirstChildOfClass("Humanoid")
+
+            if myHum then
+                myHum.Sit = false
+            end
+
+            if myChar then
+                for _, part in ipairs(myChar:GetChildren()) do
+                    if part:IsA("BasePart")
+                        and part.Name ~= "HumanoidRootPart" then
+
+                        part.CanCollide = true
+                    end
+                end
+            end
+
+            if originalCFrame
+                and myChar
+                and thisSession == flingSession then
+
+                local hrp =
+                    myChar:FindFirstChild("HumanoidRootPart")
+                    or myChar.PrimaryPart
+
+                if hrp then
+                    hrp.CFrame = originalCFrame
+                    hrp.RotVelocity = Vector3.zero
+                    hrp.Velocity = Vector3.zero
+                    hrp.AssemblyLinearVelocity = Vector3.zero
+                    hrp.AssemblyAngularVelocity = Vector3.zero
+                end
+            end
+
+            print("Teleport Fling stopped cleanly.")
+        end)
+    end,
+})
+
 local Animationstab = window:CreateTab({ name = "Animations", icon = 0 })
 
 Animationstab:CreateSection({ Name = "R15" })
@@ -2218,159 +2597,3 @@ task.spawn(function()
 end)
 
 print("Works.")
-
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local LocalPlayer = Players.LocalPlayer
-
-local selectedTargetString = "All Players" 
-local flingEnabled = false       
-local antiFlingTargets = {}
-local FlingToggleElement = nil
-
-local PlayerDropdown = CreTab:CreateDropdown({
-    name = "Select Target",
-    options = {"All Players"},
-    currentOption = {"All Players"},
-    multiSelect = false,
-    callback = function(selectedOption)
-        if type(selectedOption) == "table" then
-            selectedTargetString = selectedOption or "All Players"
-        else
-            selectedTargetString = selectedOption or "All Players"
-        end
-        print("Target updated: " .. tostring(selectedTargetString))
-    end,
-})
-
-local function UpdatePlayerDropdown()
-    local playerList = {"All Players"}
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer then
-            table.insert(playerList, player.DisplayName .. " (@" .. player.Name .. ")")
-        end
-    end
-    PlayerDropdown:Refresh(playerList)
-end
-
-UpdatePlayerDropdown()
-Players.PlayerAdded:Connect(UpdatePlayerDropdown)
-Players.PlayerRemoving:Connect(function(player)
-    antiFlingTargets[player.UserId] = nil
-    UpdatePlayerDropdown()
-end)
-
-local function GetPlayerFromTargetString(targetStr)
-    if not targetStr or targetStr == "All Players" then return nil end
-    local username = string.match(targetStr, "@([%w_]+)")
-    return username and Players:FindFirstChild(username) or nil
-end
-
-FlingToggleElement = CreTab:CreateToggle({
-    name = "Fling Target",
-    flag = "FlingTargetToggle",
-    value = false,
-    callback = function(value)
-        flingEnabled = value
-        if not flingEnabled then return end
-        
-        local originalCFrame = nil
-        local startingChar = LocalPlayer.Character
-        local startingHRP = startingChar and startingChar:FindFirstChild("HumanoidRootPart")
-        if startingHRP then
-            originalCFrame = startingHRP.CFrame
-        end
-
-        print("Teleport Fling activated!")
-        task.spawn(function()
-            local collisionConnection = nil
-            
-            collisionConnection = RunService.Stepped:Connect(function()
-                local myChar = LocalPlayer.Character
-                local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
-                local myHum = myChar and myChar:FindFirstChildOfClass("Humanoid")
-                
-                if myChar then
-                    for _, part in ipairs(myChar:GetChildren()) do
-                        if part:IsA("BasePart") then 
-                            part.CanCollide = false 
-                        end
-                    end
-                    if myHum then
-                        myHum.PlatformStand = false
-                        myHum.Sit = false
-                    end
-                    if myHRP then
-                        myHRP.Velocity = Vector3.new(0, 0, 0)
-                        myHRP.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-                    end
-                end
-            end)
-
-            while flingEnabled do
-                local myChar = LocalPlayer.Character
-                local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
-                
-                if myHRP then
-                    if selectedTargetString == "All Players" or tostring(selectedTargetString):find("All Players") then
-                        for _, p in ipairs(Players:GetPlayers()) do
-                            if p ~= LocalPlayer and flingEnabled and not antiFlingTargets[p.UserId] then
-                                local tHRP = p.Character and p.Character:FindFirstChild("HumanoidRootPart")
-                                local tHum = p.Character and p.Character:FindFirstChildOfClass("Humanoid")
-                                
-                                if tHRP and tHum and tHum.Health > 0 then
-                                    local start = os.clock()
-                                    while os.clock() - start < 1.5 and flingEnabled and tHRP.Parent do
-                                        myHRP.CFrame = tHRP.CFrame * CFrame.new(0, -3.5, 0)
-                                        myHRP.RotVelocity = Vector3.new(0, 150000, 0)
-                                        
-                                        if tHRP.AssemblyLinearVelocity.Magnitude > 120 or tHRP.AssemblyAngularVelocity.Magnitude > 120 then 
-                                            break 
-                                        end
-                                        task.wait(0.02)
-                                    end
-                                end
-                            end
-                        end
-                        flingEnabled = false
-                        FlingToggleElement:Set(false)
-                        break
-                    else
-                        local targetPlayer = GetPlayerFromTargetString(selectedTargetString)
-                        local tHRP = targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart")
-                        local tHum = targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChildOfClass("Humanoid")
-                        
-                        if tHRP and tHum and tHum.Health > 0 then
-                            local start = os.clock()
-                            while os.clock() - start < 2.0 and flingEnabled and tHRP.Parent do
-                                myHRP.CFrame = tHRP.CFrame * CFrame.new(0, -3.5, 0)
-                                myHRP.RotVelocity = Vector3.new(0, 150000, 0)
-                                
-                                if tHRP.AssemblyLinearVelocity.Magnitude > 120 or tHRP.AssemblyAngularVelocity.Magnitude > 120 then 
-                                    break 
-                                end
-                                task.wait(0.02)
-                            end
-                            flingEnabled = false
-                            FlingToggleElement:Set(false)
-                            break
-                        end
-                    end
-                end
-                task.wait(0.01)
-            end
-            
-            if originalCFrame and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                local hrp = LocalPlayer.Character.HumanoidRootPart
-                hrp.CFrame = originalCFrame
-                hrp.RotVelocity = Vector3.new(0, 0, 0)
-                hrp.Velocity = Vector3.new(0, 0, 0)
-                hrp.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-                hrp.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
-            end
-
-            if collisionConnection then collisionConnection:Disconnect() end
-            print("Teleport Fling stopped cleanly and returned player safely to original spot.")
-        end)
-    end,
-})
