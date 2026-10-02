@@ -1545,6 +1545,18 @@ scriptsTab:CreateButton({ Name = "Coolkid Executor", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/GOJO07775/C00lkiddK1ng-GUI/bb47ccdd3540216eae52b96569bf17671f0ea41d/C00lkiddK1ng%20GUI", true))()
 end })
 
+scriptsTab:CreateButton({ Name = "Coolkid Executor 2", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-c00lkid-executor-v6.0-230409"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Appleware Executor", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-AppleWare-Executor-Ui-33190"))()
+end })
+
+scriptsTab:CreateButton({ Name = "Arceus X Executor", Callback = function() 
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Arceus-X-Executor-22878"))()
+end })
+
 scriptsTab:CreateButton({ Name = "Lalol Backdoor Executor", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/its-LALOL/LALOL-Hub/main/Backdoor-Scanner/script"))()
 end })
