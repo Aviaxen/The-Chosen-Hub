@@ -1377,6 +1377,10 @@ scriptsTab:CreateButton({ Name = "Wither Storm", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/ian49972/SCRIPTS/refs/heads/main/Wither"))() 
 end })
 
+scriptsTab:CreateButton({ Name = "Fake Product", Callback = function() 
+    loadstring(game:HttpGet("https://loadstring.net/raw/Va8W0lE1PS"))()
+end })
+
 scriptsTab:CreateButton({ Name = "Control Npcs", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/qwertys/refs/heads/main/qwerty8.lua"))() 
 end })
