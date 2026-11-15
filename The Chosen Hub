@@ -1912,6 +1912,10 @@ hubsTab:CreateButton({ Name = "Universal Fe Hub", Callback = function()
     loadstring(game:HttpGet"https://you.whimper.xyz/UFE.lua")()
 end })
 
+hubsTab:CreateButton({ Name = "Yarhm Hub", Callback = function() 
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-YARHM-12403"))()
+end })
+
 local trollingTab = window:CreateTab({ Name = "Trolling", Icon = 0 })
 
 trollingTab:CreateSection({ Name = "Trolling" })
