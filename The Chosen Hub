@@ -1916,6 +1916,10 @@ hubsTab:CreateButton({ Name = "Yarhm Hub", Callback = function()
     loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-YARHM-12403"))()
 end })
 
+hubsTab:CreateButton({ Name = "Airflow Hub", Callback = function() 
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-Airflow-HUB-240409"))()
+end })
+
 local trollingTab = window:CreateTab({ Name = "Trolling", Icon = 0 })
 
 trollingTab:CreateSection({ Name = "Trolling" })
@@ -2373,6 +2377,10 @@ end })
 
 Animationstab:CreateButton({ Name = "Homelander R15", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/giobolqv1/homelander-by-GioBolqv1-/refs/heads/main/homelander.lua"))()
+end })
+
+AnimationsTab:CreateButton({ Name = "7yd7 Emote Wheels", Callback = function() 
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-7yd7-I-Emote-Script-48024"))()
 end })
 
 Animationstab:CreateSection({ Name = "R6" })
