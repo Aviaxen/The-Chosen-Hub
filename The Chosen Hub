@@ -1920,6 +1920,10 @@ hubsTab:CreateButton({ Name = "Airflow Hub", Callback = function()
     loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-Airflow-HUB-240409"))()
 end })
 
+hubsTab:CreateButton({ Name = "Hanami Hub", Callback = function() 
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-HanamiHub-Keyless-Universal-Aimbot-ESP-Mobile-227519"))()
+end })
+
 local trollingTab = window:CreateTab({ Name = "Trolling", Icon = 0 })
 
 trollingTab:CreateSection({ Name = "Trolling" })
