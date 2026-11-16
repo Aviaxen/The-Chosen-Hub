@@ -2379,7 +2379,7 @@ Animationstab:CreateButton({ Name = "Homelander R15", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/giobolqv1/homelander-by-GioBolqv1-/refs/heads/main/homelander.lua"))()
 end })
 
-AnimationsTab:CreateButton({ Name = "7yd7 Emote Wheels", Callback = function() 
+Animationstab:CreateButton({ Name = "7yd7 Emote Wheels", Callback = function() 
     loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-7yd7-I-Emote-Script-48024"))()
 end })
 
