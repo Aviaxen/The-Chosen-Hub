@@ -1450,6 +1450,10 @@ scriptsTab:CreateButton({ Name = "Virtual Keyboard", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Jskfhggjxu/My-Script/refs/heads/main/VirtualKeyboard.lua"))() 
 end })
 
+scriptsTab:CreateButton({ Name = "Keyboard V1", Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt", true))()
+end })
+
 scriptsTab:CreateButton({ Name = "Draw Chat Pro", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/ocfi/_/refs/heads/main/a"))()
 end })
