@@ -1066,48 +1066,51 @@ local flyToggle = homeTab:CreateToggle({
 })
 
 local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
 local RunService = game:GetService("RunService")
 
-local noclipConnection = nil
+local player = Players.LocalPlayer
+local noclipConnection
+local originalCollision = {}
+
+local function setNoclip(value)
+    if noclipConnection then
+        noclipConnection:Disconnect()
+        noclipConnection = nil
+    end
+
+    if value then
+        noclipConnection = RunService.Stepped:Connect(function()
+            local character = player.Character
+
+            if not character then return end
+
+            for _, part in ipairs(character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    if originalCollision[part] == nil then
+                        originalCollision[part] = part.CanCollide
+                    end
+
+                    part.CanCollide = false
+                end
+            end
+        end)
+    else
+        for part, originalValue in pairs(originalCollision) do
+            if part and part.Parent then
+                part.CanCollide = originalValue
+            end
+        end
+
+        table.clear(originalCollision)
+    end
+end
 
 local noclipToggle = homeTab:CreateToggle({
     name = "Noclip",
     flag = "Noclip",
-    value = false, 
+    value = false,
     callback = function(value)
-        if value then
-            noclipConnection = RunService.Stepped:Connect(function()
-                if LocalPlayer.Character then
-                    for _, part in ipairs(LocalPlayer.Character:GetDescendants()) do
-                        if part:IsA("BasePart") and part.CanCollide then
-                            part.CanCollide = false
-                        end
-                    end
-                end
-            end)
-        else
-            
-            if noclipConnection then
-                noclipConnection:Disconnect()
-                noclipConnection = nil
-            end
-            
-            if LocalPlayer.Character then
-                for _, part in ipairs(LocalPlayer.Character:GetDescendants()) do
-                    if part:IsA("BasePart") then
-                        part.CanCollide = true
-                    end
-                end
-                
-                local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-                if humanoid then
-                    humanoid:ChangeState(Enum.HumanoidStateType.Physics)
-                    task.wait() 
-                    humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
-                end
-            end
-        end
+        setNoclip(value)
     end,
 })
 
