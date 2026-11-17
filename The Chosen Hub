@@ -673,30 +673,64 @@ homeTab:CreateColorPicker({
     end,
 })
 
+local Lighting = game:GetService("Lighting")
+
+local originalLighting = nil
+local fullbrightConnection = nil
+
+local function enableFullbright()
+    if not originalLighting then
+        originalLighting = {
+            Ambient = Lighting.Ambient,
+            OutdoorAmbient = Lighting.OutdoorAmbient,
+            Brightness = Lighting.Brightness,
+            ClockTime = Lighting.ClockTime,
+            GlobalShadows = Lighting.GlobalShadows,
+            FogEnd = Lighting.FogEnd
+        }
+    end
+
+    if fullbrightConnection then
+        fullbrightConnection:Disconnect()
+    end
+
+    fullbrightConnection = game:GetService("RunService").RenderStepped:Connect(function()
+        Lighting.Ambient = Color3.fromRGB(255, 255, 255)
+        Lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255)
+        Lighting.Brightness = 3
+        Lighting.ClockTime = 14
+        Lighting.GlobalShadows = false
+        Lighting.FogEnd = 100000
+    end)
+end
+
+local function disableFullbright()
+    if fullbrightConnection then
+        fullbrightConnection:Disconnect()
+        fullbrightConnection = nil
+    end
+
+    if originalLighting then
+        for property, value in pairs(originalLighting) do
+            Lighting[property] = value
+        end
+
+        originalLighting = nil
+    end
+end
+
 local fullbright = homeTab:CreateToggle({
     name = "Fullbright",
     flag = "Fullbright",
     value = false,
+
     callback = function(value)
         _G.FullbrightEnabled = value
-        
+
         if value then
-            task.spawn(function()
-                local Lighting = game:GetService("Lighting")
-                while _G.FullbrightEnabled do
-                    Lighting.Ambient = Color3.fromRGB(255, 255, 255)
-                    Lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255)
-                    Lighting.Brightness = 2
-                    Lighting.ClockTime = 14
-                    task.wait(0.05) 
-                end
-            end)
+            enableFullbright()
         else
-            local Lighting = game:GetService("Lighting")
-            Lighting.Ambient = Color3.fromRGB(128, 128, 128)
-            Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
-            Lighting.Brightness = 1
-            Lighting.ClockTime = 12
+            disableFullbright()
         end
     end,
 })
