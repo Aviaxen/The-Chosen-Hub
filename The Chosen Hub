@@ -1140,7 +1140,7 @@ end)
 
 homeTab:CreateSlider({ 
     Name = "Walkspeed", 
-    Range = { 20, 250 }, 
+    Range = { 15, 250 }, 
     Increment = 1, 
     CurrentValue = 16, 
     Suffix = "studs", 
