@@ -1489,6 +1489,10 @@ scriptsTab:CreateButton({ Name = "Aimbot", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/parasopsays/Jam/refs/heads/main/beef"))() 
 end })
 
+scriptsTab:CreateButton({ Name = "LuaU Encoder", Callback = function() 
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-LuaU-Encoder-Universal-236829"))()
+end })
+
 scriptsTab:CreateButton({ Name = "Fe Scripts Collection", Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/sypcerr/FECollection/refs/heads/main/script.lua",true))()
 end })
