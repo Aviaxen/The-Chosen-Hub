@@ -1497,6 +1497,10 @@ scriptsTab:CreateButton({ Name = "Gravel.cc", Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/hm5650/HBSS/refs/heads/main/HBSS.lua"))()
 end })
 
+scriptsTab:CreateButton({ Name = "Project UAI", Callback = function() 
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-Project-UAI-2.0-230405"))()
+end })
+
 scriptsTab:CreateButton({ Name = "Wallhop", Callback = function() 
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-Wallhop-Hub-keyless-229748"))()
 end })
