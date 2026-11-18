@@ -1546,6 +1546,10 @@ scriptsTab:CreateButton({ Name = "Project UAI", Callback = function()
     loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-Project-UAI-2.0-230405"))()
 end })
 
+scriptsTab:CreateButton({ Name = "Moondiety Aimbot", Callback = function() 
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-MOONDIETY-UNIVERSAL-KEYLESS-233999"))()
+end })
+
 scriptsTab:CreateButton({ Name = "Wallhop", Callback = function() 
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-Wallhop-Hub-keyless-229748"))()
 end })
