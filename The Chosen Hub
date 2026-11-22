@@ -1438,7 +1438,7 @@ scriptsTab:CreateButton({ Name = "Universal Script Searcher", Callback = functio
     loadstring(game:HttpGet("http://scripthub.ultimatex.store"))() 
 end })
 
-scriptsTab:CreateButton({ Name = "Universal Script Searcher", Callback = function() 
+scriptsTab:CreateButton({ Name = "Universal Script Searcher 2", Callback = function() 
     loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-script-searcher-open-source-138660"))()
 end })
 
