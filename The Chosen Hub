@@ -47,7 +47,7 @@ homeTab:CreateButton({
         local popup
         popup = window:Popup({
             title = "🔥 WHAT'S NEW",
-            subtitle = "Version 3 • FEATURE DROP 🚀",
+            subtitle = "Version 4 • FEATURE DROP 🚀",
             dismissable = false, 
             boxes = {
                 { 
@@ -1438,6 +1438,10 @@ scriptsTab:CreateButton({ Name = "Universal Script Searcher", Callback = functio
     loadstring(game:HttpGet("http://scripthub.ultimatex.store"))() 
 end })
 
+scriptsTab:CreateButton({ Name = "Universal Script Searcher", Callback = function() 
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-script-searcher-open-source-138660"))()
+end })
+
 scriptsTab:CreateButton({ Name = "Script Searcher", Callback = function() 
     loadstring(game:HttpGet("https://pastefy.app/cIrUcSTO/raw"))()
 end })
@@ -2458,6 +2462,10 @@ end })
 
 Animationstab:CreateButton({ Name = "Gaze Emotes", Callback = function() 
     loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-Gaze-emotes-V1-54374"))()
+end })
+
+Animationstab:CreateButton({ Name = "Afem Max Emotes", Callback = function() 
+    loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-AFEM-Max-LITE-NO-KEY-226299"))()
 end })
 
 Animationstab:CreateSection({ Name = "R6" })
