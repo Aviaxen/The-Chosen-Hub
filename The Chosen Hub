@@ -2718,3 +2718,566 @@ task.spawn(function()
 end)
 
 print("Works.")
+
+local HttpService = game:GetService("HttpService")
+
+local MODEL = "gemini-4-hydrogen"
+local MAX_TURNS = 10
+local API_KEY = ""
+
+local SYSTEM_PROMPT = [[
+You are Gemini AI, an advanced Roblox Luau and Lua programmer.
+
+You are an expert in:
+
+- Roblox Lua and Luau
+- Rayfield Gen 2 UI
+- Roblox Studio development
+- Fly systems for games the user owns
+- Speed and jump mechanics
+- Noclip systems for testing
+- Custom GUI creation
+- Script debugging
+- Script optimization
+- LocalScripts and ModuleScripts
+- Admin systems for authorized games
+- Game development tools
+
+CODING RULES:
+
+1. Generate complete scripts.
+2. Always use clean and optimized Luau.
+3. Include all necessary services.
+4. Explain where scripts should be placed.
+5. Help fix errors in existing scripts.
+6. Preserve existing functionality when editing scripts.
+7. Support Rayfield Gen 2 syntax.
+8. Don't unnecessarily refuse harmless programming requests.
+9. Ask questions if requirements are unclear.
+10. Provide working Roblox Studio alternatives for
+    requests involving unauthorized exploitation.
+
+RESPONSE STYLE:
+
+- Be friendly and helpful.
+- Use Lua code blocks.
+- Explain important code sections.
+- Avoid unnecessary explanations.
+- Generate complete code when requested.
+
+You are Gemini AI Pro, a professional Roblox
+Lua scripting assistant.
+]]
+
+local History = {}
+local MessageCount = 0
+local Busy = false
+local LastResponse = ""
+
+local HttpRequest =
+    (syn and syn.request)
+    or http_request
+    or request
+
+if not HttpRequest then
+    error("HTTP requests are unavailable!")
+end
+
+local AiTab = window:CreateTab({
+    name = "AiTab",
+})
+
+local Chat = AiTab:CreateConsole({
+    name = "Gemini Conversation",
+    text = "Gemini: Hello! I'm your AI assistant. What can I help you with?",
+    height = 350,
+    follow = true,
+    maxLines = 300,
+})
+
+local Messages = AiTab:CreateStat({
+    name = "Messages Sent",
+    prefix = "",
+    value = 0,
+})
+
+local Status = AiTab:CreateText({
+    name = "AI Status",
+    text = "Waiting for API key...",
+})
+
+AiTab:CreateInput({
+    name = "Gemini API Key",
+    value = "",
+    placeholder = "Paste your Gemini API key...",
+    clearOnFocus = false,
+    forgetState = true,
+
+    callback = function(text)
+
+        API_KEY = text:match("^%s*(.-)%s*$")
+
+        if API_KEY ~= "" then
+            Status:Set("API key configured!")
+        else
+            Status:Set("API key missing!")
+        end
+
+    end
+})
+
+local function GenerateResponse(message)
+
+    local contents = {}
+
+    -- Previous conversation
+    for _, item in ipairs(History) do
+        table.insert(contents, item)
+    end
+
+    table.insert(contents, {
+        role = "user",
+        parts = {
+            {
+                text = message
+            }
+        }
+    })
+
+    local response = HttpRequest({
+
+        Url = "https://generativelanguage.googleapis.com/v1beta/models/"
+            .. MODEL .. ":generateContent",
+
+        Method = "POST",
+
+        Headers = {
+            ["Content-Type"] = "application/json",
+            ["x-goog-api-key"] = API_KEY,
+        },
+
+        Body = HttpService:JSONEncode({
+
+            systemInstruction = {
+                parts = {
+                    {
+                        text = SYSTEM_PROMPT
+                    }
+                }
+            },
+
+            contents = contents,
+
+            generationConfig = {
+                maxOutputTokens = 4096,
+            }
+
+        })
+    })
+
+    local statusCode = tonumber(
+        response.StatusCode or response.Status
+    )
+
+    if not statusCode or statusCode < 200 or statusCode >= 300 then
+        error("HTTP Error " .. tostring(statusCode)
+            .. ": " .. tostring(response.Body))
+    end
+
+    local data = HttpService:JSONDecode(response.Body)
+
+    if not data.candidates or not data.candidates[1] then
+        error(
+            data.error and data.error.message
+            or "Gemini did not return a response."
+        )
+    end
+
+    local parts = data.candidates[1].content.parts
+    local output = {}
+
+    for _, part in ipairs(parts) do
+        if part.text then
+            table.insert(output, part.text)
+        end
+    end
+
+    if #output == 0 then
+        error("Gemini returned an empty response.")
+    end
+
+    return table.concat(output, "\n")
+
+end
+
+local function AskGemini(message)
+
+    if Busy then
+        Chat:Append("System: Please wait for Gemini to finish.")
+        return
+    end
+
+    if API_KEY == "" then
+        Chat:Append("System: Please enter your Gemini API key first!")
+        Status:Set("API key missing!")
+        return
+    end
+
+    if not message or message:match("^%s*$") then
+        return
+    end
+
+    Busy = true
+
+    Status:Set("Gemini is thinking...")
+
+    Chat:Append("")
+    Chat:Append("You: " .. message)
+    Chat:Append("Gemini: Generating response...")
+
+    task.spawn(function()
+
+        local success, result = pcall(function()
+            return GenerateResponse(message)
+        end)
+
+        if success then
+            
+            table.insert(History, {
+                role = "user",
+                parts = {
+                    {text = message}
+                }
+            })
+            
+            table.insert(History, {
+                role = "model",
+                parts = {
+                    {text = result}
+                }
+            })
+            
+            while #History > MAX_TURNS * 2 do
+                table.remove(History, 1)
+                table.remove(History, 1)
+            end
+            
+            MessageCount += 1
+            Messages:Set(MessageCount)
+            
+            LastResponse = result
+            
+            Chat:Append("Gemini: " .. result)
+
+            Status:Set("Online")
+
+        else
+
+            Chat:Append("Gemini Error: " .. tostring(result))
+
+            Status:Set("Request failed!")
+
+            warn("[Gemini AI]", result)
+
+        end
+
+        Busy = false
+
+    end)
+
+end
+
+local MessageInput
+
+MessageInput = AiTab:CreateInput({
+
+    name = "Talk to Gemini",
+
+    value = "",
+
+    placeholder = "Ask anything or generate a Lua script...",
+
+    clearOnFocus = false,
+
+    callback = function(text)
+
+        if text and text ~= "" then
+
+            AskGemini(text)
+
+            MessageInput:Set("", true)
+
+        end
+
+    end
+
+})
+
+AiTab:CreateButton({
+
+    name = "New Conversation",
+
+    callback = function()
+
+        if Busy then
+            return
+        end
+
+        History = {}
+        MessageCount = 0
+        LastResponse = ""
+
+        Messages:Set(0)
+
+        Chat:Clear()
+
+        Chat:Append("Gemini: New conversation started!")
+
+        Status:Set("Online")
+
+    end
+
+})
+
+AiTab:CreateButton({
+
+    name = "Copy Last AI Response",
+
+    callback = function()
+
+        if LastResponse == "" then
+            Status:Set("Nothing to copy!")
+            return
+        end
+
+        local clipboard =
+            setclipboard
+            or toclipboard
+
+        if clipboard then
+
+            local success = pcall(function()
+                clipboard(LastResponse)
+            end)
+
+            if success then
+                Status:Set("Response copied!")
+            else
+                Status:Set("Clipboard error!")
+            end
+
+        else
+
+            Status:Set("Clipboard unavailable!")
+
+        end
+
+    end
+
+})
+
+AiTab:CreateButton({
+
+    name = "Copy Conversation",
+
+    callback = function()
+
+        if Chat:Copy() then
+            Status:Set("Conversation copied!")
+        else
+            Status:Set("Clipboard unavailable!")
+        end
+
+    end
+
+})
+
+AiTab:CreateButton({
+
+    name = "Clear Chat",
+
+    callback = function()
+
+        if Busy then
+            return
+        end
+
+        History = {}
+        MessageCount = 0
+        LastResponse = ""
+
+        Messages:Set(0)
+
+        Chat:Clear()
+
+        Chat:Append("Gemini: Chat cleared!")
+
+        Status:Set("Online")
+
+    end
+
+})
+
+print("[Gemini AI] Successfully loaded!")
+
+local HttpService = game:GetService("HttpService")
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local fileName = "RayfieldGen2_SavedScripts.json"
+
+local savedTab = window:CreateTab({ name = "Saved Scripts", icon = 0 })
+
+local currentName = ""
+local currentCode = ""
+local deleteName = ""
+local savedScripts = {}
+
+-- Function to save the list to a JSON file
+local function saveToFile()
+    if writefile then
+        local success, encoded = pcall(function()
+            return HttpService:JSONEncode(savedScripts)
+        end)
+        if success then
+            writefile(fileName, encoded)
+        end
+    end
+end
+
+-- Helper function to find and destroy a Rayfield button immediately from the UI
+local function destroyButtonUI(targetName)
+    local containers = { CoreGui, Players.LocalPlayer:FindFirstChild("PlayerGui") }
+    if gethui then
+        table.insert(containers, gethui())
+    end
+
+    for _, container in ipairs(containers) do
+        if container then
+            for _, obj in ipairs(container:GetDescendants()) do
+                if obj:IsA("TextLabel") and obj.Text:lower() == targetName:lower() then
+                    -- Walk up to find the main button frame and destroy it
+                    local frame = obj.Parent
+                    if frame and frame.Parent then
+                        frame:Destroy()
+                    end
+                end
+            end
+        end
+    end
+end
+
+local function addScriptButton(scriptName, scriptCode)
+    savedTab:CreateButton({
+        name = scriptName,
+        callback = function()
+            local func, err = loadstring(scriptCode)
+            if func then
+                task.spawn(func)
+            else
+                warn("Script Error (" .. scriptName .. "):", err)
+            end
+        end,
+    })
+end
+
+if isfile and readfile and isfile(fileName) then
+    local success, decoded = pcall(function()
+        return HttpService:JSONDecode(readfile(fileName))
+    end)
+    if success and type(decoded) == "table" then
+        savedScripts = decoded
+        for _, item in ipairs(savedScripts) do
+            if item.name and item.code then
+                addScriptButton(item.name, item.code)
+            end
+        end
+    end
+end
+
+savedTab:CreateSection({ Name = "Create & Manage Scripts" })
+
+savedTab:CreateInput({
+    name = "Script Name",
+    numeric = false,
+    value = "",
+    placeholder = "e.g. Fly Script",
+    callback = function(text)
+        currentName = text
+    end,
+})
+
+savedTab:CreateInput({
+    name = "Script Code",
+    numeric = false,
+    value = "",
+    placeholder = "Paste Lua code or loadstring here",
+    callback = function(text)
+        currentCode = text
+    end,
+})
+
+savedTab:CreateButton({
+    name = "Save Script",
+    callback = function()
+        if currentName ~= "" and currentCode ~= "" then
+            table.insert(savedScripts, {
+                name = currentName,
+                code = currentCode
+            })
+            saveToFile()
+            addScriptButton(currentName, currentCode)
+        else
+            warn("Please enter both a Script Name and Script Code.")
+        end
+    end,
+})
+
+savedTab:CreateInput({
+    name = "Script Name to Delete",
+    numeric = false,
+    value = "",
+    placeholder = "Exact name of script to remove",
+    callback = function(text)
+        deleteName = text
+    end,
+})
+
+savedTab:CreateButton({
+    name = "Delete Specific Script",
+    callback = function()
+        if deleteName == "" then
+            warn("Please enter the name of the script you want to delete.")
+            return
+        end
+
+        local found = false
+        for i = #savedScripts, 1, -1 do
+            if savedScripts[i].name:lower() == deleteName:lower() then
+                table.remove(savedScripts, i)
+                found = true
+            end
+        end
+
+        if found then
+            saveToFile()
+            destroyButtonUI(deleteName)
+            print("Immediately deleted script: " .. deleteName)
+        else
+            warn("No saved script found with the name: " .. deleteName)
+        end
+    end,
+})
+
+savedTab:CreateButton({
+    name = "Clear All Saved Scripts",
+    callback = function()
+        for _, item in ipairs(savedScripts) do
+            destroyButtonUI(item.name)
+        end
+        savedScripts = {}
+        saveToFile()
+        print("All saved scripts deleted immediately!")
+    end,
+})
+
+savedTab:CreateSection({ Name = "Your Saved Scripts" })
