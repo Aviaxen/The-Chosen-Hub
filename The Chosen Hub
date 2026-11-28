@@ -2783,9 +2783,7 @@ if not HttpRequest then
     error("HTTP requests are unavailable!")
 end
 
-local AiTab = window:CreateTab({
-    name = "AiTab",
-})
+local AiTab = window:CreateTab({ Name = "Gemini", icon = 0 })
 
 local Chat = AiTab:CreateConsole({
     name = "Gemini Conversation",
